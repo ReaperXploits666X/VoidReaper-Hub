@@ -1,172 +1,284 @@
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local CoreGui = game:GetService("CoreGui")
-local SoundService = game:GetService("SoundService")
-local UserInputService = game:GetService("UserInputService")
+-- VoidReaper-Hub Versão X
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "VoidReaperHub"
 
--- Só ativa no Brookhaven
-if game.PlaceId == 4924922222 then
-    local gui = Instance.new("ScreenGui", CoreGui)
-    gui.Name = "VoidReaperHub"
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 450, 0, 320)
+frame.Position = UDim2.new(0.5, -225, 0.5, -160)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BorderSizePixel = 2
+frame.Active = true
+frame.Draggable = true
+frame.Visible = true
 
-    local abrir = Instance.new("TextButton", gui)
-    abrir.Size = UDim2.new(0, 120, 0, 30)
-    abrir.Position = UDim2.new(0, 10, 0, 10)
-    abrir.Text = "VoidReaper Hub"
-    abrir.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    abrir.TextColor3 = Color3.fromRGB(255, 0, 0)
-    abrir.Font = Enum.Font.GothamBold
-    abrir.TextSize = 16
+local title = Instance.new("TextLabel", frame)
+title.Text = "VoidReaper Hub"
+title.Size = UDim2.new(0, 200, 0, 25)
+title.Position = UDim2.new(0, 10, 0, 10)
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(255, 0, 0)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextXAlignment = Enum.TextXAlignment.Left
 
-    local frame = Instance.new("Frame", gui)
-    frame.Size = UDim2.new(0, 480, 0, 280)
-    frame.Position = UDim2.new(0.5, -240, 0.5, -140)
-    frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+local closeBtn = Instance.new("TextButton", frame)
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 5)
+closeBtn.Text = "X"
+closeBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+closeBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 16
+closeBtn.MouseButton1Click:Connect(function()
     frame.Visible = false
-    frame.Active = true
-    frame.Draggable = true
+end)
 
-    local lista = Instance.new("ScrollingFrame", frame)
-    lista.Size = UDim2.new(0, 160, 0, 240)
-    lista.Position = UDim2.new(0, 10, 0, 10)
-    lista.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    lista.ScrollBarThickness = 6
+local reopenBtn = Instance.new("TextButton", gui)
+reopenBtn.Size = UDim2.new(0, 120, 0, 30)
+reopenBtn.Position = UDim2.new(0, 10, 0, 10)
+reopenBtn.Text = "Abrir VoidReaper"
+reopenBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+reopenBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+reopenBtn.Font = Enum.Font.Gotham
+reopenBtn.TextSize = 14
+reopenBtn.MouseButton1Click:Connect(function()
+    frame.Visible = true
+end)
 
-    local acoes = Instance.new("Frame", frame)
-    acoes.Size = UDim2.new(0, 280, 0, 240)
-    acoes.Position = UDim2.new(0, 190, 0, 10)
-    acoes.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+local listFrame = Instance.new("Frame", frame)
+listFrame.Size = UDim2.new(0, 200, 0, 30)
+listFrame.Position = UDim2.new(0, 10, 0, 45)
+listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+listFrame.BorderSizePixel = 1
 
-    local selectedPlayer = nil
-    local controlando = nil
+local toggleList = Instance.new("TextButton", listFrame)
+toggleList.Size = UDim2.new(1, 0, 1, 0)
+toggleList.Text = "Mostrar Jogadores"
+toggleList.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+toggleList.TextColor3 = Color3.fromRGB(255, 0, 0)
+toggleList.Font = Enum.Font.Gotham
+toggleList.TextSize = 14
 
-    local function atualizarLista()
-        lista:ClearAllChildren()
-        local y = 0
-        for _, p in ipairs(Players:GetPlayers()) do
-            if p ~= LocalPlayer then
-                local b = Instance.new("TextButton", lista)
-                b.Size = UDim2.new(1, -10, 0, 25)
-                b.Position = UDim2.new(0, 5, 0, y)
-                b.Text = p.Name
-                b.TextColor3 = Color3.fromRGB(255, 0, 0)
-                b.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
-                b.Font = Enum.Font.Gotham
-                b.TextSize = 14
-                b.MouseButton1Click:Connect(function()
-                    selectedPlayer = p
-                    b.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-                end)
-                y += 30
-            end
-        end
-        lista.CanvasSize = UDim2.new(0, 0, 0, y)
-    end
+local playerList = Instance.new("ScrollingFrame", frame)
+playerList.Size = UDim2.new(0, 200, 0, 140)
+playerList.Position = UDim2.new(0, 10, 0, 75)
+playerList.CanvasSize = UDim2.new(0, 0, 0, 0)
+playerList.ScrollBarThickness = 6
+playerList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+playerList.BorderSizePixel = 1
+playerList.Visible = false
 
-    atualizarLista()
-    Players.PlayerAdded:Connect(function()
-        wait(1)
-        atualizarLista()
-    end)
+toggleList.MouseButton1Click:Connect(function()
+    playerList.Visible = not playerList.Visible
+end)
 
-    local function botao(txt, y, func)
-        local b = Instance.new("TextButton", acoes)
-        b.Size = UDim2.new(1, -20, 0, 25)
-        b.Position = UDim2.new(0, 10, 0, y)
-        b.Text = txt
-        b.TextColor3 = Color3.fromRGB(255, 0, 0)
-        b.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
-        b.Font = Enum.Font.GothamBold
-        b.TextSize = 14
-        b.MouseButton1Click:Connect(func)
-    end
+local selectedPlayer = nil
 
-    botao("Jaula", 0, function()
-        if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            local root = selectedPlayer.Character.HumanoidRootPart
-            local base = Instance.new("Part", workspace)
-            base.Size = Vector3.new(10, 1, 10)
-            base.Position = Vector3.new(0, 5, 0)
-            base.Anchored = true
-            base.Color = Color3.fromRGB(60, 0, 80)
-            local function parede(pos, size)
-                local p = Instance.new("Part", workspace)
-                p.Size = size
-                p.Position = base.Position + pos
-                p.Anchored = true
-                p.Color = Color3.fromRGB(128, 0, 128)
-                p.Material = Enum.Material.Neon
-            end
-            parede(Vector3.new(0, 3, -5), Vector3.new(10, 6, 1))
-            parede(Vector3.new(0, 3, 5), Vector3.new(10, 6, 1))
-            parede(Vector3.new(-5, 3, 0), Vector3.new(1, 6, 10))
-            parede(Vector3.new(5, 3, 0), Vector3.new(1, 6, 10))
-            parede(Vector3.new(0, 6, 0), Vector3.new(10, 1, 10))
-            root.CFrame = CFrame.new(base.Position + Vector3.new(0, 2, 0))
-        end
-    end)
+for i, plr in pairs(game.Players:GetPlayers()) do
+    local btn = Instance.new("TextButton", playerList)
+    btn.Size = UDim2.new(1, -10, 0, 25)
+    btn.Position = UDim2.new(0, 5, 0, (i - 1) * 30)
+    btn.Text = plr.Name
+    btn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+    btn.TextColor3 = Color3.fromRGB(255, 0, 0)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 12
+    btn.BorderSizePixel = 0
 
-    botao("Teleportar", 30, function()
-        if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = selectedPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)
-        end
-    end)
-
-    botao("Desbanir da Casa", 60, function()
-        for _, obj in pairs(workspace:GetDescendants()) do
-            if obj:IsA("Model") and obj:FindFirstChild("BanList") then
-                local banList = obj.BanList
-                if banList:FindFirstChild(LocalPlayer.Name) then
-                    banList[LocalPlayer.Name]:Destroy()
-                end
-            end
-        end
-    end)
-
-    botao("Controlar Jogador", 90, function()
-        if selectedPlayer then controlando = selectedPlayer end
-    end)
-
-    botao("Fling", 120, function()
-        if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            local v = Instance.new("BodyVelocity", selectedPlayer.Character.HumanoidRootPart)
-            v.Velocity = Vector3.new(1000, 1000, 1000)
-            v.MaxForce = Vector3.new(1e5, 1e5, 1e5)
-            wait(0.5)
-            v:Destroy()
-        end
-    end)
-
-    botao("Som de Erro", 150, function()
-        local s = Instance.new("Sound", SoundService)
-        s.SoundId = "rbxassetid://911882310"
-        s.Volume = 1
-        s:Play()
-    end)
-
-    botao("Skybox Camisa FE", 180, function()
-        local shirt = Instance.new("Shirt", LocalPlayer.Character)
-        shirt.ShirtTemplate = "rbxassetid://17372543307" -- ID da camisa bugada que simula skybox
-    end)
-
-    UserInputService.InputBegan:Connect(function(input, gp)
-        if controlando and input.KeyCode == Enum.KeyCode.Return and not gp then
-            local chatGui = LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Chat")
-            if chatGui then
-                for _, obj in pairs(chatGui:GetDescendants()) do
-                    if obj:IsA("TextBox") and obj.Text ~= "" then
-                        local msg = Instance.new("Message", workspace)
-                        msg.Text = controlando.Name .. ": " .. obj.Text
-                        wait(3)
-                        msg:Destroy()
-                        break
-                    end
-                end
-            end
-        end
-    end)
-
-    abrir.MouseButton1Click:Connect(function()
-        frame.Visible = not frame.Visible
+    btn.MouseButton1Click:Connect(function()
+        selectedPlayer = plr
     end)
 end
+playerList.CanvasSize = UDim2.new(0, 0, 0, #game.Players:GetPlayers() * 30)
+
+local function createButton(text, posY, callback)
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(0, 200, 0, 25)
+    btn.Position = UDim2.new(0, 230, 0, posY)
+    btn.Text = text
+    btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+    btn.TextColor3 = Color3.fromRGB(255, 0, 0)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 12
+    btn.MouseButton1Click:Connect(callback)
+end
+
+createButton("Troll Jogador", 45, function()
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        selectedPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(9999, -9999, 9999)
+    end
+end)
+
+createButton("Jaula Tubers93", 75, function()
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local cage = Instance.new("Part", workspace)
+        cage.Size = Vector3.new(6, 6, 6)
+        cage.Position = selectedPlayer.Character.HumanoidRootPart.Position
+        cage.Anchored = true
+        cage.Color = Color3.fromRGB(255, 0, 0)
+        cage.Material = Enum.Material.ForceField
+
+        local light = Instance.new("PointLight", cage)
+        light.Color = Color3.fromRGB(255, 0, 0)
+        light.Range = 20
+        light.Brightness = 5
+    end
+end)
+
+createButton("Teleportar até Jogador", 105, function()
+    local lp = game.Players.LocalPlayer
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        lp.Character.HumanoidRootPart.CFrame = selectedPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(2, 0, 2)
+    end
+end)
+
+createButton("Lag Player", 135, function()
+    if selectedPlayer and selectedPlayer.Character then
+        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
+        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if hum then
+            hum.WalkSpeed = 0
+            hum.JumpPower = 0
+            hum.AutoRotate = false
+        end
+        if root then
+            root.Anchored = true
+        end
+    end
+end)
+
+createButton("Modo Void Visual", 165, function()
+    local dome = Instance.new("Part", workspace)
+    dome.Size = Vector3.new(1000, 1, 1000)
+    dome.Position = Vector3.new(0, 300, 0)
+    dome.Anchored = true
+    dome.Color = Color3.fromRGB(0, 0, 0)
+    dome.Material = Enum.Material.SmoothPlastic
+    dome.Transparency = 0.3
+    dome.Name = "VoidDome"
+
+    for i = 1, 10 do
+        local fog = Instance.new("ParticleEmitter", dome)
+        fog.Texture = "rbxassetid://243098098"
+        fog.Rate = 50
+        fog.Lifetime = NumberRange.new(5)
+        fog.Speed = NumberRange.new(2)
+        fog.Size = NumberSequence.new(10)
+        fog.Color = ColorSequence.new(Color3.fromRGB(0, 0, 0))
+        fog.LightEmission = 0
+        fog.Enabled = true
+    end
+
+    local light = Instance.new("PointLight", dome)
+    light.Color = Color3.fromRGB(255, 0, 0)
+    light.Range = 1000
+    light.Brightness = 10
+end)
+
+createButton("Som Tubers93", 195, function()
+    local sound = Instance.new("Sound", workspace)
+    sound.SoundId = "rbxassetid://911882310"
+    sound.Volume = 10
+    sound.PlayOnRemove = true
+    sound:Destroy()
+end)
+
+createButton("Invasão Tubers93", 225, function()
+
+for i = 1, 5 do
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
+            "⚠️ VoidReaper Hub ativado por Tubers93", "All"
+        )
+        wait(1)
+    end
+end)
+
+createButton("Congelar para sempre", 255, function()
+    if selectedPlayer and selectedPlayer.Character then
+        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
+        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if hum then
+            hum.WalkSpeed = 0
+            hum.JumpPower = 0
+            hum.AutoRotate = false
+            hum.PlatformStand = true
+        end
+        if root then
+            root.Anchored = true
+        end
+
+        while selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") do
+            local h = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
+            local r = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if h then
+                h.WalkSpeed = 0
+                h.JumpPower = 0
+                h.AutoRotate = false
+                h.PlatformStand = true
+            end
+            if r then
+                r.Anchored = true
+            end
+            wait(1)
+        end
+    end
+end)
+
+createButton("Descongelar Jogador", 285, function()
+    if selectedPlayer and selectedPlayer.Character then
+        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
+        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if hum then
+            hum.WalkSpeed = 16
+            hum.JumpPower = 50
+            hum.AutoRotate = true
+            hum.PlatformStand = false
+        end
+        if root then
+            root.Anchored = false
+        end
+    end
+end)
+
+createButton("Explodir o Mapa", 315, function()
+    for _, part in pairs(workspace:GetDescendants()) do
+        if part:IsA("BasePart") and not part:IsDescendantOf(game.Players.LocalPlayer.Character) then
+            part.Anchored = false
+            part.Velocity = Vector3.new(math.random(-500, 500), math.random(500, 1000), math.random(-500, 500))
+        end
+    end
+end)
+
+createButton("Restaurar Visual", 345, function()
+    for _, obj in pairs(workspace:GetChildren()) do
+        if obj.Name == "VoidDome" then
+            obj:Destroy()
+        end
+    end
+end)
+
+createButton("Falar como Jogador", 375, function()
+    if selectedPlayer then
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
+            selectedPlayer.Name .. " diz: Eu sou Tubers93", "All"
+        )
+    end
+end)
+
+createButton("Congelar Todos", 405, function()
+    for _, plr in pairs(game.Players:GetPlayers()) do
+        if plr.Character then
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            local root = plr.Character:FindFirstChild("HumanoidRootPart")
+            if hum then
+                hum.WalkSpeed = 0
+                hum.JumpPower = 0
+                hum.AutoRotate = false
+                hum.PlatformStand = true
+            end
+            if root then
+                root.Anchored = true
+            end
+        end
+    end
+end)
