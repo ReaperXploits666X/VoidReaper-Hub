@@ -1,0 +1,12 @@
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "VoodReaperHub"
+
+local btn = Instance.new("TextButton", gui)
+btn.Size = UDim2.new(0, 100, 0, 40)
+btn.Position = UDim2.new(0.5, -50, 0, 10)
+btn.Text = "Ativar VoodReaper"
+btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+btn.TextColor3 = Color3.fromRGB(255, 0, 0)
+btn.MouseButton1Click:Connect(function()
+    print("VoodReaper Ativado!")
+end)
