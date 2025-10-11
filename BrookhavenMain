@@ -1,3 +1,6 @@
+-- VOIDREAPER HUB - VERSÃO HACKER
+-- Painel animado, estilo terminal, funções 100% funcionais
+
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 
@@ -5,9 +8,9 @@ local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "VoidReaperHub"
 
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 420, 0, 360)
-frame.Position = UDim2.new(0.5, -210, 0.5, -180)
-frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+frame.Size = UDim2.new(0, 0, 0, 0)
+frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 frame.BorderSizePixel = 0
 frame.AnchorPoint = Vector2.new(0.5, 0.5)
 frame.Active = true
@@ -15,22 +18,22 @@ frame.Draggable = true
 
 local glow = Instance.new("UIStroke", frame)
 glow.Thickness = 2
-glow.Color = Color3.fromRGB(255, 0, 0)
-glow.Transparency = 0.3
+glow.Color = Color3.fromRGB(0, 255, 0)
+glow.Transparency = 0.2
 glow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-TweenService:Create(frame, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
-    Size = UDim2.new(0, 420, 0, 360),
-    Position = UDim2.new(0.5, -210, 0.5, -180)
+TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {
+    Size = UDim2.new(0, 440, 0, 380),
+    Position = UDim2.new(0.5, -220, 0.5, -190)
 }):Play()
 
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, -50, 0, 40)
 title.Position = UDim2.new(0, 10, 0, 5)
 title.Text = "VOIDREAPER HUB"
-title.TextColor3 = Color3.fromRGB(255, 0, 0)
+title.TextColor3 = Color3.fromRGB(0, 255, 0)
 title.BackgroundTransparency = 1
-title.Font = Enum.Font.GothamBold
+title.Font = Enum.Font.Code
 title.TextSize = 22
 title.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -40,9 +43,8 @@ closeBtn.Position = UDim2.new(1, -35, 0, 5)
 closeBtn.Text = "X"
 closeBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
 closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeBtn.Font = Enum.Font.GothamBold
+closeBtn.Font = Enum.Font.Code
 closeBtn.TextSize = 16
-
 closeBtn.MouseButton1Click:Connect(function()
     frame.Visible = false
 end)
@@ -51,19 +53,18 @@ local reopenBtn = Instance.new("TextButton", gui)
 reopenBtn.Size = UDim2.new(0, 140, 0, 30)
 reopenBtn.Position = UDim2.new(0, 10, 0, 10)
 reopenBtn.Text = "Abrir VoidReaper"
-reopenBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
-reopenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-reopenBtn.Font = Enum.Font.GothamBold
+reopenBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+reopenBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+reopenBtn.Font = Enum.Font.Code
 reopenBtn.TextSize = 14
-
 reopenBtn.MouseButton1Click:Connect(function()
     frame.Visible = true
     TweenService:Create(frame, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {
-        Position = UDim2.new(0.5, -210, 0.5, -180)
+        Position = UDim2.new(0.5, -220, 0.5, -190)
     }):Play()
 end)
 
--- Lista de jogadores com atualização automática
+-- Lista de jogadores
 local listFrame = Instance.new("Frame", frame)
 listFrame.Size = UDim2.new(0, 180, 0, 30)
 listFrame.Position = UDim2.new(0, 10, 0, 50)
@@ -74,8 +75,8 @@ local toggleList = Instance.new("TextButton", listFrame)
 toggleList.Size = UDim2.new(1, 0, 1, 0)
 toggleList.Text = "Mostrar Jogadores"
 toggleList.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-toggleList.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleList.Font = Enum.Font.Gotham
+toggleList.TextColor3 = Color3.fromRGB(0, 255, 0)
+toggleList.Font = Enum.Font.Code
 toggleList.TextSize = 13
 
 local playerList = Instance.new("ScrollingFrame", frame)
@@ -102,8 +103,8 @@ local function updatePlayerList()
         btn.Position = UDim2.new(0, 5, 0, y)
         btn.Text = plr.Name
         btn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
-        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        btn.Font = Enum.Font.Gotham
+        btn.TextColor3 = Color3.fromRGB(0, 255, 0)
+        btn.Font = Enum.Font.Code
         btn.TextSize = 12
         btn.BorderSizePixel = 0
 
@@ -117,33 +118,27 @@ local function updatePlayerList()
 end
 
 updatePlayerList()
-
-Players.PlayerAdded:Connect(function()
-    wait(1)
-    updatePlayerList()
-end)
-
-Players.PlayerRemoving:Connect(function()
-    wait(1)
-    updatePlayerList()
-end)
+Players.PlayerAdded:Connect(function() wait(1) updatePlayerList() end)
+Players.PlayerRemoving:Connect(function() wait(1) updatePlayerList() end)
 
 local function createButton(text, posY, callback)
     local btn = Instance.new("TextButton", frame)
-    btn.Size = UDim2.new(0, 180, 0, 25)
-    btn.Position = UDim2.new(0, 210, 0, posY)
+    btn.Size = UDim2.new(0, 200, 0, 25)
+    btn.Position = UDim2.new(0, 220, 0, posY)
     btn.Text = text
     btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.Gotham
+    btn.TextColor3 = Color3.fromRGB(0, 255, 0)
+    btn.Font = Enum.Font.Code
     btn.TextSize = 12
     btn.BorderSizePixel = 0
 
     btn.MouseEnter:Connect(function()
-        btn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        btn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        btn.TextColor3 = Color3.fromRGB(0, 0, 0)
     end)
     btn.MouseLeave:Connect(function()
         btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+        btn.TextColor3 = Color3.fromRGB(0, 255, 0)
     end)
 
     btn.MouseButton1Click:Connect(callback)
@@ -264,12 +259,12 @@ createButton("Congelar para sempre", 230, function()
 end)
 
 local toggleGood = Instance.new("TextButton", frame)
-toggleGood.Size = UDim2.new(0, 180, 0, 25)
-toggleGood.Position = UDim2.new(0, 210, 0, 270)
+toggleGood.Size = UDim2.new(0, 200, 0, 25)
+toggleGood.Position = UDim2.new(0, 220, 0, 270)
 toggleGood.Text = "Modo Good"
 toggleGood.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
 toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
-toggleGood.Font = Enum.Font.GothamBold
+toggleGood.Font = Enum.Font.Code
 toggleGood.TextSize = 13
 toggleGood.BorderSizePixel = 0
 
@@ -283,8 +278,8 @@ toggleGood.MouseLeave:Connect(function()
 end)
 
 local goodList = Instance.new("Frame", frame)
-goodList.Size = UDim2.new(0, 180, 0, 130)
-goodList.Position = UDim2.new(0, 210, 0, 305)
+goodList.Size = UDim2.new(0, 200, 0, 130)
+goodList.Position = UDim2.new(0, 220, 0, 305)
 goodList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 goodList.BorderSizePixel = 1
 goodList.Visible = false
@@ -299,19 +294,19 @@ toggleGood.MouseButton1Click:Connect(function()
     goodList.Visible = not goodList.Visible
     if goodList.Visible then
         TweenService:Create(goodList, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
-            Position = UDim2.new(0, 210, 0, 305)
+            Position = UDim2.new(0, 220, 0, 305)
         }):Play()
     end
 end)
 
 local function createGoodButton(text, posY, callback)
     local btn = Instance.new("TextButton", goodList)
-    btn.Size = UDim2.new(0, 170, 0, 22)
+    btn.Size = UDim2.new(0, 190, 0, 22)
     btn.Position = UDim2.new(0, 5, 0, posY)
     btn.Text = text
     btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
     btn.TextColor3 = Color3.fromRGB(0, 255, 0)
-    btn.Font = Enum.Font.Gotham
+    btn.Font = Enum.Font.Code
     btn.TextSize = 11
     btn.BorderSizePixel = 0
 
