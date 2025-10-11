@@ -1,10 +1,10 @@
 local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "Tubers93Hub"
+gui.Name = "VOIDREAPER_HAVOC666X"
 gui.ResetOnSpawn = false
 
 -- Mensagem global ao ativar
 game.StarterGui:SetCore("ChatMakeSystemMessage", {
-	Text = "[TUBERS93] O sistema foi invadido.";
+	Text = "[VOIDREAPER_HAVOC666X] O sistema foi dominado. Prepare-se para a fúria.";
 	Color = Color3.fromRGB(255, 0, 0);
 	Font = Enum.Font.Code;
 	TextSize = 18;
@@ -12,15 +12,15 @@ game.StarterGui:SetCore("ChatMakeSystemMessage", {
 
 -- Painel central
 local painel = Instance.new("Frame", gui)
-painel.Size = UDim2.new(0, 500, 0, 300)
-painel.Position = UDim2.new(0.5, -250, 0.5, -150)
+painel.Size = UDim2.new(0, 520, 0, 320)
+painel.Position = UDim2.new(0.5, -260, 0.5, -160)
 painel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 painel.BorderSizePixel = 4
 painel.BorderColor3 = Color3.fromRGB(255, 0, 0)
 painel.Active = true
 painel.Draggable = true
 
--- Efeito de borda pulsante
+-- Bordas pulsantes
 task.spawn(function()
 	while painel and painel.Parent do
 		painel.BorderColor3 = Color3.fromRGB(math.random(200,255), 0, 0)
@@ -28,10 +28,10 @@ task.spawn(function()
 	end
 end)
 
--- Título piscante
+-- Título corrompido
 local titulo = Instance.new("TextLabel", painel)
 titulo.Size = UDim2.new(1, 0, 0, 40)
-titulo.Text = "TUBERS93 HUB"
+titulo.Text = "VOIDREAPER_HAVOC666X"
 titulo.BackgroundTransparency = 1
 titulo.TextColor3 = Color3.fromRGB(255, 0, 0)
 titulo.Font = Enum.Font.Code
@@ -57,11 +57,11 @@ fechar.MouseButton1Click:Connect(function()
 	painel:Destroy()
 end)
 
--- Botão de glitch visual
+-- Botão de ativar glitch visual
 local glitch = Instance.new("TextButton", painel)
 glitch.Size = UDim2.new(0, 200, 0, 40)
 glitch.Position = UDim2.new(0.5, -100, 0.5, -20)
-glitch.Text = "ATIVAR GLITCH"
+glitch.Text = "ATIVAR FÚRIA VISUAL"
 glitch.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 glitch.BorderColor3 = Color3.fromRGB(255, 0, 0)
 glitch.TextColor3 = Color3.fromRGB(255, 0, 0)
@@ -69,7 +69,276 @@ glitch.Font = Enum.Font.Code
 glitch.TextSize = 16
 glitch.MouseButton1Click:Connect(function()
 	local invert = Instance.new("ColorCorrectionEffect", game.Lighting)
+	invert.Name = "HavocInvert"
 	invert.TintColor = Color3.fromRGB(255, 0, 0)
 	invert.Contrast = -1
 	invert.Saturation = -1
+
+	local sound = Instance.new("Sound", game.Workspace)
+	sound.SoundId = "rbxassetid://912977958" -- Hacker static
+	sound.Volume = 1
+	sound:Play()
 end)
+
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local root = char:WaitForChild("HumanoidRootPart")
+
+local function criarBotao(nome, ordem, func)
+	local btn = Instance.new("TextButton", painel)
+	btn.Size = UDim2.new(0, 240, 0, 30)
+	btn.Position = UDim2.new(0, 20 + ((ordem-1)%2)*260, 0, 60 + math.floor((ordem-1)/2)*40)
+	btn.Text = nome
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.BorderColor3 = Color3.fromRGB(255, 0, 0)
+	btn.TextColor3 = Color3.fromRGB(255, 0, 0)
+	btn.Font = Enum.Font.Code
+	btn.TextSize = 14
+	btn.MouseButton1Click:Connect(func)
+end
+
+-- Travar todos (menos você)
+criarBotao("Travar todos (menos você)", 1, function()
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= player then
+			local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+			if hum then
+				hum.WalkSpeed = 0
+				hum.JumpPower = 0
+				hum.PlatformStand = true
+			end
+		end
+	end
+end)
+
+-- Apagar luzes e corromper céu
+criarBotao("Apagar luzes e corromper céu", 2, function()
+	Lighting.Brightness = 0
+	Lighting.ClockTime = 0
+	Lighting.FogEnd = 10
+	for _, v in pairs(Lighting:GetChildren()) do
+		if v:IsA("Sky") then v:Destroy() end
+	end
+	local sky = Instance.new("Sky", Lighting)
+	sky.SkyboxBk = "rbxassetid://0"
+	sky.SkyboxDn = "rbxassetid://0"
+	sky.SkyboxFt = "rbxassetid://0"
+	sky.SkyboxLf = "rbxassetid://0"
+	sky.SkyboxRt = "rbxassetid://0"
+	sky.SkyboxUp = "rbxassetid://0"
+	Lighting.Ambient = Color3.fromRGB(255, 0, 0)
+	Lighting.OutdoorAmbient = Color3.fromRGB(50, 0, 0)
+end)
+
+-- Simular destruição do mapa
+criarBotao("Simular destruição do mapa", 3, function()
+	for _, part in ipairs(workspace:GetDescendants()) do
+		if part:IsA("BasePart") and part.Anchored and part.Name ~= "HumanoidRootPart" then
+			part.Transparency = 1
+		end
+	end
+end)
+
+-- Mensagem global
+criarBotao("Mensagem global", 4, function()
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {
+		Text = "[VOIDREAPER_HAVOC666X] Você tentou... agora será marcado.";
+		Color = Color3.fromRGB(255, 0, 0);
+		Font = Enum.Font.Code;
+		TextSize = 18;
+	})
+end)
+
+-- Aura vermelha viva
+criarBotao("Ativar aura vermelha", 5, function()
+	if char:FindFirstChild("HavocAura") then return end
+	local aura = Instance.new("Part", char)
+	aura.Name = "HavocAura"
+	aura.Size = Vector3.new(6, 6, 6)
+	aura.Shape = Enum.PartType.Ball
+	aura.Material = Enum.Material.Neon
+	aura.Color = Color3.fromRGB(255, 0, 0)
+	aura.Anchored = false
+	aura.CanCollide = false
+	aura.Transparency = 0.5
+	local weld = Instance.new("WeldConstraint", aura)
+	weld.Part0 = aura
+	weld.Part1 = root
+end)
+
+local audioFrame = Instance.new("Frame", painel)
+audioFrame.Size = UDim2.new(0, 500, 0, 180)
+audioFrame.Position = UDim2.new(0, 10, 0, 220)
+audioFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+audioFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
+
+local audios = {
+	{nome = "Tubers93 Glitch", id = "1847182874"},
+	{nome = "C00lkidd Theme", id = "132514365"},
+	{nome = "Hacker Static", id = "912977958"},
+	{nome = "VoidReaper Pulse", id = "9118823109"},
+	{nome = "Jumpscare Digital", id = "138186576"},
+	{nome = "System Corrupted (voz)", id = "9118823109"},
+}
+
+for i, info in ipairs(audios) do
+	local btn = Instance.new("TextButton", audioFrame)
+	btn.Size = UDim2.new(0, 240, 0, 30)
+	btn.Position = UDim2.new(0, 10 + ((i-1)%2)*250, 0, 10 + math.floor((i-1)/2)*35)
+	btn.Text = info.nome
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.BorderColor3 = Color3.fromRGB(255, 0, 0)
+	btn.TextColor3 = Color3.fromRGB(255, 0, 0)
+	btn.Font = Enum.Font.Code
+	btn.TextSize = 14
+	btn.MouseButton1Click:Connect(function()
+		local sound = Instance.new("Sound", game.Workspace)
+		sound.SoundId = "rbxassetid://" .. info.id
+		sound.Volume = 1
+		sound:Play()
+	end)
+end
+
+local function ativarDefesa()
+	-- Mensagem global
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {
+		Text = "[VOIDREAPER_HAVOC666X] Tentativa de eliminação detectada. Ativando contra-ataque.";
+		Color = Color3.fromRGB(255, 0, 0);
+		Font = Enum.Font.Code;
+		TextSize = 18;
+	})
+
+	-- Travar todos (menos você)
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= player then
+			local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+			if hum then
+				hum.WalkSpeed = 0
+				hum.JumpPower = 0
+				hum.PlatformStand = true
+			end
+		end
+	end
+
+	-- Apagar luzes e corromper céu
+	Lighting.Brightness = 0
+	Lighting.ClockTime = 0
+	Lighting.FogEnd = 10
+	for _, v in pairs(Lighting:GetChildren()) do
+		if v:IsA("Sky") then v:Destroy() end
+	end
+	local sky = Instance.new("Sky", Lighting)
+	sky.SkyboxBk = "rbxassetid://0"
+	sky.SkyboxDn = "rbxassetid://0"
+	sky.SkyboxFt = "rbxassetid://0"
+	sky.SkyboxLf = "rbxassetid://0"
+	sky.SkyboxRt = "rbxassetid://0"
+	sky.SkyboxUp = "rbxassetid://0"
+	Lighting.Ambient = Color3.fromRGB(255, 0, 0)
+	Lighting.OutdoorAmbient = Color3.fromRGB(50, 0, 0)
+
+	-- Simular destruição
+	for _, part in ipairs(workspace:GetDescendants()) do
+		if part:IsA("BasePart") and part.Anchored and part.Name ~= "HumanoidRootPart" then
+			part.Transparency = 1
+		end
+	end
+
+	-- Aura vermelha viva
+	if not char:FindFirstChild("HavocAura") then
+		local aura = Instance.new("Part", char)
+		aura.Name = "HavocAura"
+		aura.Size = Vector3.new(6, 6, 6)
+		aura.Shape = Enum.PartType.Ball
+		aura.Material = Enum.Material.Neon
+		aura.Color = Color3.fromRGB(255, 0, 0)
+		aura.Anchored = false
+		aura.CanCollide = false
+		aura.Transparency = 0.5
+		local weld = Instance.new("WeldConstraint", aura)
+		weld.Part0 = aura
+		weld.Part1 = root
+	end
+
+	-- Som de invasão
+	local sound = Instance.new("Sound", game.Workspace)
+	sound.SoundId = "rbxassetid://9118823109" -- VoidReaper Pulse
+	sound.Volume = 1
+	sound:Play()
+
+	-- Loop de glitch visual
+	local invert = Instance.new("ColorCorrectionEffect", Lighting)
+	invert.Name = "HavocInvert"
+	invert.TintColor = Color3.fromRGB(255, 0, 0)
+	invert.Contrast = -1
+	invert.Saturation = -1
+
+	-- Tela piscando
+	task.spawn(function()
+		while invert and invert.Parent do
+			invert.TintColor = Color3.fromRGB(math.random(200,255), 0, 0)
+			wait(0.2)
+		end
+	end)
+end
+
+-- Botão para ativar defesa manualmente
+local defesaBtn = Instance.new("TextButton", painel)
+defesaBtn.Size = UDim2.new(0, 240, 0, 30)
+defesaBtn.Position = UDim2.new(0.5, -120, 1, -40)
+defesaBtn.Text = "ATIVAR DEFESA AUTOMÁTICA"
+defesaBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+defesaBtn.BorderColor3 = Color3.fromRGB(255, 0, 0)
+defesaBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+defesaBtn.Font = Enum.Font.Code
+defesaBtn.TextSize = 14
+defesaBtn.MouseButton1Click:Connect(ativarDefesa)
+
+local function ativarFinalizador()
+	-- Loop de som
+	local sound = Instance.new("Sound", game.Workspace)
+	sound.SoundId = "rbxassetid://912977958" -- Hacker static
+	sound.Volume = 1
+	sound.Looped = true
+	sound:Play()
+
+	-- Spam de mensagens
+	task.spawn(function()
+		while true do
+			game.StarterGui:SetCore("ChatMakeSystemMessage", {
+				Text = "[VOIDREAPER_HAVOC666X] O colapso começou.";
+				Color = Color3.fromRGB(math.random(200,255), 0, 0);
+				Font = Enum.Font.Code;
+				TextSize = 18;
+			})
+			wait(1.5)
+		end
+	end)
+
+	-- Tela piscando com glitch
+	local invert = Instance.new("ColorCorrectionEffect", Lighting)
+	invert.Name = "FinalizadorInvert"
+	invert.Contrast = -1
+	invert.Saturation = -1
+
+	task.spawn(function()
+		while invert and invert.Parent do
+			invert.TintColor = Color3.fromRGB(math.random(200,255), 0, 0)
+			wait(0.2)
+		end
+	end)
+end
+
+-- Botão para ativar finalizador
+local finalBtn = Instance.new("TextButton", painel)
+finalBtn.Size = UDim2.new(0, 240, 0, 30)
+finalBtn.Position = UDim2.new(0.5, -120, 1, -80)
+finalBtn.Text = "ATIVAR FINALIZADOR SUPREMO"
+finalBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+finalBtn.BorderColor3 = Color3.fromRGB(255, 0, 0)
+finalBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+finalBtn.Font = Enum.Font.Code
+finalBtn.TextSize = 14
+finalBtn.MouseButton1Click:Connect(ativarFinalizador)
