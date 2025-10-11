@@ -1,102 +1,144 @@
 local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
 
 local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "VoidReaperHub"
 
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 0, 0, 0)
-frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+frame.Size = UDim2.new(0, 420, 0, 360)
+frame.Position = UDim2.new(0.5, -210, 0.5, -180)
+frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 frame.BorderSizePixel = 0
 frame.AnchorPoint = Vector2.new(0.5, 0.5)
-frame.Visible = true
+frame.Active = true
+frame.Draggable = true
 
--- Neon glow
 local glow = Instance.new("UIStroke", frame)
 glow.Thickness = 2
 glow.Color = Color3.fromRGB(255, 0, 0)
 glow.Transparency = 0.3
 glow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
--- Fade-in animação
-TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-    Size = UDim2.new(0, 500, 0, 400),
-    Position = UDim2.new(0.5, 0, 0.5, 0)
+TweenService:Create(frame, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
+    Size = UDim2.new(0, 420, 0, 360),
+    Position = UDim2.new(0.5, -210, 0.5, -180)
 }):Play()
 
--- Som de abertura (opcional)
-local sound = Instance.new("Sound", frame)
-sound.SoundId = "rbxassetid://911882310"
-sound.Volume = 1
-sound:Play()
-
--- Título estilizado
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, 0, 0, 50)
-title.Position = UDim2.new(0, 0, 0, 0)
-title.Text = "⚔️ VOIDREAPER HUB ⚔️"
+title.Size = UDim2.new(1, -50, 0, 40)
+title.Position = UDim2.new(0, 10, 0, 5)
+title.Text = "VOIDREAPER HUB"
 title.TextColor3 = Color3.fromRGB(255, 0, 0)
 title.BackgroundTransparency = 1
-title.Font = Enum.Font.FredokaOne
-title.TextSize = 28
-title.TextStrokeTransparency = 0.5
-title.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 22
+title.TextXAlignment = Enum.TextXAlignment.Left
 
--- Botão de fechar com hover
 local closeBtn = Instance.new("TextButton", frame)
-closeBtn.Size = UDim2.new(0, 40, 0, 40)
-closeBtn.Position = UDim2.new(1, -45, 0, 5)
-closeBtn.Text = "✖"
-closeBtn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 5)
+closeBtn.Text = "X"
+closeBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
 closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 20
-
--- Hover efeito
-closeBtn.MouseEnter:Connect(function()
-    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-end)
-closeBtn.MouseLeave:Connect(function()
-    closeBtn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-end)
+closeBtn.TextSize = 16
 
 closeBtn.MouseButton1Click:Connect(function()
     frame.Visible = false
 end)
 
--- Botão de reabrir
 local reopenBtn = Instance.new("TextButton", gui)
-reopenBtn.Size = UDim2.new(0, 140, 0, 35)
+reopenBtn.Size = UDim2.new(0, 140, 0, 30)
 reopenBtn.Position = UDim2.new(0, 10, 0, 10)
-reopenBtn.Text = "🔓 Abrir VoidReaper"
-reopenBtn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+reopenBtn.Text = "Abrir VoidReaper"
+reopenBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
 reopenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 reopenBtn.Font = Enum.Font.GothamBold
 reopenBtn.TextSize = 14
 
-reopenBtn.MouseEnter:Connect(function()
-    reopenBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-end)
-reopenBtn.MouseLeave:Connect(function()
-    reopenBtn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-end)
-
 reopenBtn.MouseButton1Click:Connect(function()
     frame.Visible = true
+    TweenService:Create(frame, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {
+        Position = UDim2.new(0.5, -210, 0.5, -180)
+    }):Play()
+end)
+
+-- Lista de jogadores com atualização automática
+local listFrame = Instance.new("Frame", frame)
+listFrame.Size = UDim2.new(0, 180, 0, 30)
+listFrame.Position = UDim2.new(0, 10, 0, 50)
+listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+listFrame.BorderSizePixel = 1
+
+local toggleList = Instance.new("TextButton", listFrame)
+toggleList.Size = UDim2.new(1, 0, 1, 0)
+toggleList.Text = "Mostrar Jogadores"
+toggleList.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+toggleList.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleList.Font = Enum.Font.Gotham
+toggleList.TextSize = 13
+
+local playerList = Instance.new("ScrollingFrame", frame)
+playerList.Size = UDim2.new(0, 180, 0, 120)
+playerList.Position = UDim2.new(0, 10, 0, 85)
+playerList.CanvasSize = UDim2.new(0, 0, 0, 0)
+playerList.ScrollBarThickness = 6
+playerList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+playerList.BorderSizePixel = 1
+playerList.Visible = false
+
+toggleList.MouseButton1Click:Connect(function()
+    playerList.Visible = not playerList.Visible
+end)
+
+local selectedPlayer = nil
+
+local function updatePlayerList()
+    playerList:ClearAllChildren()
+    local y = 0
+    for _, plr in pairs(Players:GetPlayers()) do
+        local btn = Instance.new("TextButton", playerList)
+        btn.Size = UDim2.new(1, -10, 0, 25)
+        btn.Position = UDim2.new(0, 5, 0, y)
+        btn.Text = plr.Name
+        btn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.Gotham
+        btn.TextSize = 12
+        btn.BorderSizePixel = 0
+
+        btn.MouseButton1Click:Connect(function()
+            selectedPlayer = plr
+        end)
+
+        y = y + 30
+    end
+    playerList.CanvasSize = UDim2.new(0, 0, 0, y)
+end
+
+updatePlayerList()
+
+Players.PlayerAdded:Connect(function()
+    wait(1)
+    updatePlayerList()
+end)
+
+Players.PlayerRemoving:Connect(function()
+    wait(1)
+    updatePlayerList()
 end)
 
 local function createButton(text, posY, callback)
     local btn = Instance.new("TextButton", frame)
-    btn.Size = UDim2.new(0, 200, 0, 30)
-    btn.Position = UDim2.new(0, 20, 0, posY)
+    btn.Size = UDim2.new(0, 180, 0, 25)
+    btn.Position = UDim2.new(0, 210, 0, posY)
     btn.Text = text
     btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 14
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 12
     btn.BorderSizePixel = 0
 
-    -- Hover efeito
     btn.MouseEnter:Connect(function()
         btn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     end)
@@ -107,13 +149,13 @@ local function createButton(text, posY, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
-createButton("Troll Jogador", 70, function()
+createButton("Troll Jogador", 50, function()
     if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
         selectedPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(9999, -9999, 9999)
     end
 end)
 
-createButton("Jaula Tubers93", 110, function()
+createButton("Jaula Tubers93", 80, function()
     if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
         local root = selectedPlayer.Character.HumanoidRootPart
         local size = 6
@@ -134,14 +176,14 @@ createButton("Jaula Tubers93", 110, function()
     end
 end)
 
-createButton("Teleportar até Jogador", 150, function()
+createButton("Teleportar até Jogador", 110, function()
     local lp = game.Players.LocalPlayer
     if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
         lp.Character.HumanoidRootPart.CFrame = selectedPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(2, 0, 2)
     end
 end)
 
-createButton("Lag Player", 190, function()
+createButton("Lag Player", 140, function()
     if selectedPlayer and selectedPlayer.Character then
         local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
         local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -156,7 +198,7 @@ createButton("Lag Player", 190, function()
     end
 end)
 
-createButton("Modo Void Visual", 230, function()
+createButton("Modo Void Visual", 170, function()
     local dome = Instance.new("Part", workspace)
     dome.Size = Vector3.new(2000, 1, 2000)
     dome.Position = Vector3.new(0, 300, 0)
@@ -182,7 +224,7 @@ createButton("Modo Void Visual", 230, function()
     light.Brightness = 10
 end)
 
-createButton("Som Tubers93", 270, function()
+createButton("Som Tubers93", 200, function()
     local sound = Instance.new("Sound", workspace)
     sound.SoundId = "rbxassetid://911882310"
     sound.Volume = 10
@@ -190,7 +232,7 @@ createButton("Som Tubers93", 270, function()
     sound:Destroy()
 end)
 
-createButton("Congelar para sempre", 310, function()
+createButton("Congelar para sempre", 230, function()
     if selectedPlayer and selectedPlayer.Character then
         local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
         local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -222,13 +264,13 @@ createButton("Congelar para sempre", 310, function()
 end)
 
 local toggleGood = Instance.new("TextButton", frame)
-toggleGood.Size = UDim2.new(0, 200, 0, 30)
-toggleGood.Position = UDim2.new(0, 20, 0, 350)
-toggleGood.Text = "🧠 Modo Good"
+toggleGood.Size = UDim2.new(0, 180, 0, 25)
+toggleGood.Position = UDim2.new(0, 210, 0, 270)
+toggleGood.Text = "Modo Good"
 toggleGood.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
 toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
 toggleGood.Font = Enum.Font.GothamBold
-toggleGood.TextSize = 14
+toggleGood.TextSize = 13
 toggleGood.BorderSizePixel = 0
 
 toggleGood.MouseEnter:Connect(function()
@@ -241,8 +283,8 @@ toggleGood.MouseLeave:Connect(function()
 end)
 
 local goodList = Instance.new("Frame", frame)
-goodList.Size = UDim2.new(0, 200, 0, 160)
-goodList.Position = UDim2.new(0, 20, 0, 390)
+goodList.Size = UDim2.new(0, 180, 0, 130)
+goodList.Position = UDim2.new(0, 210, 0, 305)
 goodList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 goodList.BorderSizePixel = 1
 goodList.Visible = false
@@ -255,17 +297,22 @@ glow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 toggleGood.MouseButton1Click:Connect(function()
     goodList.Visible = not goodList.Visible
+    if goodList.Visible then
+        TweenService:Create(goodList, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+            Position = UDim2.new(0, 210, 0, 305)
+        }):Play()
+    end
 end)
 
 local function createGoodButton(text, posY, callback)
     local btn = Instance.new("TextButton", goodList)
-    btn.Size = UDim2.new(0, 190, 0, 25)
+    btn.Size = UDim2.new(0, 170, 0, 22)
     btn.Position = UDim2.new(0, 5, 0, posY)
     btn.Text = text
     btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
     btn.TextColor3 = Color3.fromRGB(0, 255, 0)
     btn.Font = Enum.Font.Gotham
-    btn.TextSize = 12
+    btn.TextSize = 11
     btn.BorderSizePixel = 0
 
     btn.MouseEnter:Connect(function()
@@ -296,7 +343,7 @@ createGoodButton("Descongelar Jogador", 0, function()
     end
 end)
 
-createGoodButton("Explodir o Mapa", 30, function()
+createGoodButton("Explodir o Mapa", 25, function()
     for _, part in pairs(workspace:GetDescendants()) do
         if part:IsA("BasePart") and not part:IsDescendantOf(game.Players.LocalPlayer.Character) then
             part.Anchored = false
@@ -305,7 +352,7 @@ createGoodButton("Explodir o Mapa", 30, function()
     end
 end)
 
-createGoodButton("Restaurar Visual", 60, function()
+createGoodButton("Restaurar Visual", 50, function()
     for _, obj in pairs(workspace:GetChildren()) do
         if obj.Name == "VoidDome" then
             obj:Destroy()
@@ -313,7 +360,7 @@ createGoodButton("Restaurar Visual", 60, function()
     end
 end)
 
-createGoodButton("Falar como Jogador", 90, function()
+createGoodButton("Falar como Jogador", 75, function()
     if selectedPlayer then
         game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
             selectedPlayer.Name .. " diz: Eu sou Tubers93", "All"
@@ -321,7 +368,7 @@ createGoodButton("Falar como Jogador", 90, function()
     end
 end)
 
-createGoodButton("Congelar Todos (exceto eu)", 120, function()
+createGoodButton("Congelar Todos (exceto eu)", 100, function()
     local lp = game.Players.LocalPlayer
     for _, plr in pairs(game.Players:GetPlayers()) do
         if plr ~= lp and plr.Character then
