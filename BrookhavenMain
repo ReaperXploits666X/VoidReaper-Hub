@@ -185,6 +185,7 @@ end)
 
 createButton("Invasão Tubers93", 225, function()
 
+-- Botão "Modo Good" para abrir/fechar a lista
 local toggleGood = Instance.new("TextButton", frame)
 toggleGood.Size = UDim2.new(0, 200, 0, 25)
 toggleGood.Position = UDim2.new(0, 230, 0, 45)
@@ -194,6 +195,7 @@ toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
 toggleGood.Font = Enum.Font.GothamBold
 toggleGood.TextSize = 14
 
+-- Lista suspensa com botões extras
 local goodList = Instance.new("Frame", frame)
 goodList.Size = UDim2.new(0, 200, 0, 150)
 goodList.Position = UDim2.new(0, 230, 0, 75)
@@ -201,6 +203,7 @@ goodList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 goodList.BorderSizePixel = 1
 goodList.Visible = false
 
+-- Alternar visibilidade da lista
 toggleGood.MouseButton1Click:Connect(function()
     goodList.Visible = not goodList.Visible
 end)
@@ -219,6 +222,7 @@ local function createGoodButton(text, posY, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
+-- Botões dentro do menu "Modo Good"
 createGoodButton("Descongelar Jogador", 0, function()
     if selectedPlayer and selectedPlayer.Character then
         local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
