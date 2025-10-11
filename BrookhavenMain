@@ -1,426 +1,75 @@
 local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "VoidReaperHub4"
+gui.Name = "Tubers93Hub"
 gui.ResetOnSpawn = false
 
--- Botão abrir/fechar
-local toggle = Instance.new("TextButton", gui)
-toggle.Size = UDim2.new(0, 120, 0, 30)
-toggle.Position = UDim2.new(0, 10, 0, 10)
-toggle.Text = "Abrir Hub"
-toggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-toggle.BorderColor3 = Color3.fromRGB(255, 0, 0)
-toggle.TextColor3 = Color3.fromRGB(255, 0, 0)
-toggle.Font = Enum.Font.Code
-toggle.TextSize = 14
+-- Mensagem global ao ativar
+game.StarterGui:SetCore("ChatMakeSystemMessage", {
+	Text = "[TUBERS93] O sistema foi invadido.";
+	Color = Color3.fromRGB(255, 0, 0);
+	Font = Enum.Font.Code;
+	TextSize = 18;
+})
 
--- Painel principal
+-- Painel central
 local painel = Instance.new("Frame", gui)
-painel.Size = UDim2.new(0, 600, 0, 400)
-painel.Position = UDim2.new(0.5, -300, 0.5, -200)
+painel.Size = UDim2.new(0, 500, 0, 300)
+painel.Position = UDim2.new(0.5, -250, 0.5, -150)
 painel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+painel.BorderSizePixel = 4
 painel.BorderColor3 = Color3.fromRGB(255, 0, 0)
-painel.Visible = false
 painel.Active = true
 painel.Draggable = true
 
--- Cabeçalho
-local header = Instance.new("TextLabel", painel)
-header.Size = UDim2.new(1, 0, 0, 30)
-header.Text = "VOIDREAPER_666X HUB 4.1"
-header.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-header.BorderColor3 = Color3.fromRGB(255, 0, 0)
-header.TextColor3 = Color3.fromRGB(255, 0, 0)
-header.Font = Enum.Font.Code
-header.TextSize = 18
+-- Efeito de borda pulsante
+task.spawn(function()
+	while painel and painel.Parent do
+		painel.BorderColor3 = Color3.fromRGB(math.random(200,255), 0, 0)
+		wait(0.1)
+	end
+end)
 
--- Botão fechar
+-- Título piscante
+local titulo = Instance.new("TextLabel", painel)
+titulo.Size = UDim2.new(1, 0, 0, 40)
+titulo.Text = "TUBERS93 HUB"
+titulo.BackgroundTransparency = 1
+titulo.TextColor3 = Color3.fromRGB(255, 0, 0)
+titulo.Font = Enum.Font.Code
+titulo.TextSize = 28
+
+task.spawn(function()
+	while titulo and titulo.Parent do
+		titulo.TextTransparency = titulo.TextTransparency == 0 and 0.5 or 0
+		wait(0.3)
+	end
+end)
+
+-- Botão de fechar
 local fechar = Instance.new("TextButton", painel)
-fechar.Size = UDim2.new(0, 30, 0, 30)
-fechar.Position = UDim2.new(1, -35, 0, 0)
+fechar.Size = UDim2.new(0, 40, 0, 40)
+fechar.Position = UDim2.new(1, -45, 0, 0)
 fechar.Text = "X"
 fechar.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
 fechar.TextColor3 = Color3.fromRGB(255, 0, 0)
 fechar.Font = Enum.Font.Code
-fechar.TextSize = 16
+fechar.TextSize = 20
 fechar.MouseButton1Click:Connect(function()
-	painel.Visible = false
-	toggle.Text = "Abrir Hub"
+	painel:Destroy()
 end)
 
--- Alternar visibilidade
-toggle.MouseButton1Click:Connect(function()
-	painel.Visible = not painel.Visible
-	toggle.Text = painel.Visible and "Fechar Hub" or "Abrir Hub"
-end)
-
--- Abas nomeadas corretamente
-local abas = {}
-local nomesAbas = {"Geral", "Jogadores", "Modo Good"}
-for i, nome in ipairs(nomesAbas) do
-	local abaBtn = Instance.new("TextButton", painel)
-	abaBtn.Size = UDim2.new(0, 120, 0, 30)
-	abaBtn.Position = UDim2.new(0, 10 + (i-1)*130, 0, 40)
-	abaBtn.Text = nome
-	abaBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	abaBtn.BorderColor3 = Color3.fromRGB(255, 0, 0)
-	abaBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
-	abaBtn.Font = Enum.Font.Code
-	abaBtn.TextSize = 14
-
-	local abaFrame = Instance.new("Frame", painel)
-	abaFrame.Name = nome -- Nomeação correta da aba
-	abaFrame.Size = UDim2.new(0, 580, 0, 320)
-	abaFrame.Position = UDim2.new(0, 10, 0, 80)
-	abaFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	abaFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
-	abaFrame.Visible = false
-	abas[nome] = abaFrame
-
-	abaBtn.MouseButton1Click:Connect(function()
-		for _, frame in pairs(abas) do frame.Visible = false end
-		abaFrame.Visible = true
-	end)
-end
-
-local abaGeral = painel:FindFirstChild("Geral")
-if not abaGeral then return end
-
-local function criarBotaoGeral(nome, ordem, func)
-	local btn = Instance.new("TextButton", abaGeral)
-	btn.Size = UDim2.new(0, 180, 0, 30)
-	btn.Position = UDim2.new(0, 10 + ((ordem-1)%3)*190, 0, 10 + math.floor((ordem-1)/3)*35)
-	btn.Text = nome
-	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	btn.BorderColor3 = Color3.fromRGB(255, 0, 0)
-	btn.TextColor3 = Color3.fromRGB(255, 0, 0)
-	btn.Font = Enum.Font.Code
-	btn.TextSize = 14
-	btn.MouseButton1Click:Connect(func)
-end
-
-local Players = game:GetService("Players")
-local Lighting = game:GetService("Lighting")
-local player = Players.LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
-local root = char:WaitForChild("HumanoidRootPart")
-
--- Mensagem na tela
-criarBotaoGeral("Mensagem na tela", 1, function()
-	local msg = Instance.new("TextLabel", game.CoreGui)
-	msg.Size = UDim2.new(1, 0, 0, 50)
-	msg.Position = UDim2.new(0, 0, 0.4, 0)
-	msg.Text = "VOIDREAPER_666X ESTÁ ATIVO"
-	msg.TextColor3 = Color3.fromRGB(255, 0, 0)
-	msg.BackgroundTransparency = 1
-	msg.Font = Enum.Font.Code
-	msg.TextSize = 32
-	task.delay(3, function() msg:Destroy() end)
-end)
-
--- Mensagem no chat
-criarBotaoGeral("Mensagem no chat", 2, function()
-	game.StarterGui:SetCore("ChatMakeSystemMessage", {
-		Text = "[VOIDREAPER_666X] O sistema foi corrompido.";
-		Color = Color3.fromRGB(255, 0, 0);
-		Font = Enum.Font.Code;
-		TextSize = 18;
-	})
-end)
-
--- Teleporte para o spawn
-criarBotaoGeral("Teleporte para o spawn", 3, function()
-	if root then
-		root.CFrame = CFrame.new(0, 10, 0)
-	end
-end)
-
--- Buffs máximos
-criarBotaoGeral("Buffs máximos", 4, function()
-	local hum = char:FindFirstChildOfClass("Humanoid")
-	if hum then
-		hum.WalkSpeed = 100
-		hum.JumpPower = 150
-		hum.MaxHealth = math.huge
-		hum.Health = math.huge
-	end
-end)
-
--- Aura vermelha
-criarBotaoGeral("Aura vermelha", 5, function()
-	if char:FindFirstChild("VoidAura") then return end
-	local aura = Instance.new("Part", char)
-	aura.Name = "VoidAura"
-	aura.Size = Vector3.new(6, 6, 6)
-	aura.Shape = Enum.PartType.Ball
-	aura.Material = Enum.Material.Neon
-	aura.Color = Color3.fromRGB(255, 0, 0)
-	aura.Anchored = false
-	aura.CanCollide = false
-	aura.Transparency = 0.5
-	local weld = Instance.new("WeldConstraint", aura)
-	weld.Part0 = aura
-	weld.Part1 = root
-end)
-
--- Corromper céu
-criarBotaoGeral("Corromper céu", 6, function()
-	for _, v in pairs(Lighting:GetChildren()) do
-		if v:IsA("Sky") then v:Destroy() end
-	end
-	local sky = Instance.new("Sky", Lighting)
-	sky.SkyboxBk = "rbxassetid://0"
-	sky.SkyboxDn = "rbxassetid://0"
-	sky.SkyboxFt = "rbxassetid://0"
-	sky.SkyboxLf = "rbxassetid://0"
-	sky.SkyboxRt = "rbxassetid://0"
-	sky.SkyboxUp = "rbxassetid://0"
-	Lighting.Ambient = Color3.fromRGB(255, 0, 0)
-	Lighting.OutdoorAmbient = Color3.fromRGB(50, 0, 0)
-end)
-
-local abaJogadores = painel:FindFirstChild("Jogadores")
-if not abaJogadores then return end
-
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local lista = Instance.new("ScrollingFrame", abaJogadores)
-lista.Size = UDim2.new(1, -20, 1, -20)
-lista.Position = UDim2.new(0, 10, 0, 10)
-lista.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-lista.BorderColor3 = Color3.fromRGB(255, 0, 0)
-lista.CanvasSize = UDim2.new(0, 0, 0, 0)
-lista.ScrollBarThickness = 6
-lista.AutomaticCanvasSize = Enum.AutomaticSize.Y
-
-local layout = Instance.new("UIListLayout", lista)
-layout.Padding = UDim.new(0, 5)
-
-local function criarLinha(plr)
-	local linha = Instance.new("Frame", lista)
-	linha.Size = UDim2.new(1, -10, 0, 40)
-	linha.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	linha.BorderColor3 = Color3.fromRGB(255, 0, 0)
-
-	local nome = Instance.new("TextLabel", linha)
-	nome.Size = UDim2.new(0.4, 0, 1, 0)
-	nome.Text = plr.Name
-	nome.TextColor3 = Color3.fromRGB(255, 0, 0)
-	nome.BackgroundTransparency = 1
-	nome.Font = Enum.Font.Code
-	nome.TextSize = 14
-
-	local tp = Instance.new("TextButton", linha)
-	tp.Size = UDim2.new(0.2, 0, 1, 0)
-	tp.Position = UDim2.new(0.4, 0, 0, 0)
-	tp.Text = "TP"
-	tp.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	tp.BorderColor3 = Color3.fromRGB(255, 0, 0)
-	tp.TextColor3 = Color3.fromRGB(255, 0, 0)
-	tp.Font = Enum.Font.Code
-	tp.TextSize = 14
-	tp.MouseButton1Click:Connect(function()
-		local root = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
-		local myRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-		if root and myRoot then
-			myRoot.CFrame = root.CFrame + Vector3.new(0, 3, 0)
-		end
-	end)
-
-	local aura = Instance.new("TextButton", linha)
-	aura.Size = UDim2.new(0.2, 0, 1, 0)
-	aura.Position = UDim2.new(0.6, 0, 0, 0)
-	aura.Text = "Aura"
-	aura.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	aura.BorderColor3 = Color3.fromRGB(255, 0, 0)
-	aura.TextColor3 = Color3.fromRGB(255, 0, 0)
-	aura.Font = Enum.Font.Code
-	aura.TextSize = 14
-	aura.MouseButton1Click:Connect(function()
-		local root = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
-		if root and not plr.Character:FindFirstChild("VoidAura") then
-			local auraPart = Instance.new("Part", plr.Character)
-			auraPart.Name = "VoidAura"
-			auraPart.Size = Vector3.new(6, 6, 6)
-			auraPart.Shape = Enum.PartType.Ball
-			auraPart.Material = Enum.Material.Neon
-			auraPart.Color = Color3.fromRGB(255, 0, 0)
-			auraPart.Anchored = false
-			auraPart.CanCollide = false
-			auraPart.Transparency = 0.5
-			local weld = Instance.new("WeldConstraint", auraPart)
-			weld.Part0 = auraPart
-			weld.Part1 = root
-		end
-	end)
-
-	local msg = Instance.new("TextButton", linha)
-	msg.Size = UDim2.new(0.2, 0, 1, 0)
-	msg.Position = UDim2.new(0.8, 0, 0, 0)
-	msg.Text = "MSG"
-	msg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	msg.BorderColor3 = Color3.fromRGB(255, 0, 0)
-	msg.TextColor3 = Color3.fromRGB(255, 0, 0)
-	msg.Font = Enum.Font.Code
-	msg.TextSize = 14
-	msg.MouseButton1Click:Connect(function()
-		game.StarterGui:SetCore("ChatMakeSystemMessage", {
-			Text = "[VOIDREAPER_666X] " .. plr.Name .. " foi marcado.";
-			Color = Color3.fromRGB(255, 0, 0);
-			Font = Enum.Font.Code;
-			TextSize = 18;
-		})
-	end)
-end
-
-for _, plr in ipairs(Players:GetPlayers()) do
-	criarLinha(plr)
-end
-
-Players.PlayerAdded:Connect(function(plr)
-	criarLinha(plr)
-end)
-
-local abaGood = painel:FindFirstChild("Modo Good")
-if not abaGood then return end
-
--- Painel de senha visual
-local senhaFrame = Instance.new("Frame", abaGood)
-senhaFrame.Size = UDim2.new(0, 300, 0, 150)
-senhaFrame.Position = UDim2.new(0.5, -150, 0.3, 0)
-senhaFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-senhaFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
-
-local senhaInput = Instance.new("TextBox", senhaFrame)
-senhaInput.Size = UDim2.new(0.8, 0, 0, 30)
-senhaInput.Position = UDim2.new(0.1, 0, 0.3, 0)
-senhaInput.PlaceholderText = "Digite a senha..."
-senhaInput.BackgroundColor3 = Color3.fromRGB(20, 0, 0)
-senhaInput.TextColor3 = Color3.fromRGB(255, 0, 0)
-senhaInput.Font = Enum.Font.Code
-senhaInput.TextSize = 14
-
-local confirmar = Instance.new("TextButton", senhaFrame)
-confirmar.Size = UDim2.new(0.5, 0, 0, 30)
-confirmar.Position = UDim2.new(0.25, 0, 0.7, 0)
-confirmar.Text = "Confirmar"
-confirmar.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
-confirmar.TextColor3 = Color3.fromRGB(255, 0, 0)
-confirmar.Font = Enum.Font.Code
-confirmar.TextSize = 14
-
-local senhaCorreta = "Vø!d6#X_Çørr0p!d0"
-local function normalizar(t)
-	return t:lower():gsub("ø","o"):gsub("ç","c"):gsub("!",""):gsub("#",""):gsub(" ","")
-end
-
-confirmar.MouseButton1Click:Connect(function()
-	if normalizar(senhaInput.Text) == normalizar(senhaCorreta) then
-		senhaFrame:Destroy()
-
-		local sub = Instance.new("Frame", abaGood)
-		sub.Size = UDim2.new(1, -20, 1, -20)
-		sub.Position = UDim2.new(0, 10, 0, 10)
-		sub.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-		sub.BorderColor3 = Color3.fromRGB(255, 0, 0)
-
-		local function criarBotao(nome, ordem, func)
-			local btn = Instance.new("TextButton", sub)
-			btn.Size = UDim2.new(0, 180, 0, 30)
-			btn.Position = UDim2.new(0, 10 + ((ordem-1)%3)*190, 0, 10 + math.floor((ordem-1)/3)*35)
-			btn.Text = nome
-			btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-			btn.BorderColor3 = Color3.fromRGB(255, 0, 0)
-			btn.TextColor3 = Color3.fromRGB(255, 0, 0)
-			btn.Font = Enum.Font.Code
-			btn.TextSize = 14
-			btn.MouseButton1Click:Connect(func)
-		end
-
-		local Players = game:GetService("Players")
-		local Lighting = game:GetService("Lighting")
-		local player = Players.LocalPlayer
-		local char = player.Character or player.CharacterAdded:Wait()
-		local root = char:WaitForChild("HumanoidRootPart")
-
-		criarBotao("Buffs máximos", 1, function()
-			local hum = char:FindFirstChildOfClass("Humanoid")
-			if hum then
-				hum.WalkSpeed = 100
-				hum.JumpPower = 150
-				hum.MaxHealth = math.huge
-				hum.Health = math.huge
-			end
-		end)
-
-		criarBotao("Travar todos (menos você)", 2, function()
-			for _, plr in ipairs(Players:GetPlayers()) do
-				if plr ~= player then
-					local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
-					if hum then
-						hum.WalkSpeed = 0
-						hum.JumpPower = 0
-						hum.PlatformStand = true
-					end
-				end
-			end
-		end)
-
-		criarBotao("Apagar luzes", 3, function()
-			Lighting.Brightness = 0
-			Lighting.ClockTime = 0
-			Lighting.FogEnd = 10
-		end)
-
-		criarBotao("Simular destruição", 4, function()
-			for _, part in ipairs(workspace:GetDescendants()) do
-				if part:IsA("BasePart") and part.Anchored and part.Name ~= "HumanoidRootPart" then
-					part.Transparency = 1
-				end
-			end
-		end)
-
-		criarBotao("Mensagem global", 5, function()
-			game.StarterGui:SetCore("ChatMakeSystemMessage", {
-				Text = "[VOIDREAPER_666X] O sistema foi dominado.";
-				Color = Color3.fromRGB(255, 0, 0);
-				Font = Enum.Font.Code;
-				TextSize = 18;
-			})
-		end)
-
-		criarBotao("Áudios", 6, function()
-			local audioFrame = Instance.new("Frame", sub)
-			audioFrame.Size = UDim2.new(0, 560, 0, 200)
-			audioFrame.Position = UDim2.new(0, 10, 0, 200)
-			audioFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-			audioFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
-
-			local audios = {
-				{nome = "Tubers93 Glitch", id = "1847182874"},
-				{nome = "C00lkidd Theme", id = "132514365"},
-				{nome = "Hacker Static", id = "912977958"},
-				{nome = "VoidReaper Pulse", id = "9118823109"},
-				{nome = "Jumpscare", id = "138186576"},
-			}
-
-			for i, info in ipairs(audios) do
-				local btn = Instance.new("TextButton", audioFrame)
-				btn.Size = UDim2.new(0, 180, 0, 30)
-				btn.Position = UDim2.new(0, 10 + ((i-1)%3)*185, 0, 10 + math.floor((i-1)/3)*35)
-				btn.Text = info.nome
-				btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-				btn.BorderColor3 = Color3.fromRGB(255, 0, 0)
-				btn.TextColor3 = Color3.fromRGB(255, 0, 0)
-				btn.Font = Enum.Font.Code
-				btn.TextSize = 14
-				btn.MouseButton1Click:Connect(function()
-					local sound = Instance.new("Sound", game.Workspace)
-					sound.SoundId = "rbxassetid://" .. info.id
-					sound.Volume = 1
-					sound:Play()
-				end)
-			end
-		end)
-	end
+-- Botão de glitch visual
+local glitch = Instance.new("TextButton", painel)
+glitch.Size = UDim2.new(0, 200, 0, 40)
+glitch.Position = UDim2.new(0.5, -100, 0.5, -20)
+glitch.Text = "ATIVAR GLITCH"
+glitch.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+glitch.BorderColor3 = Color3.fromRGB(255, 0, 0)
+glitch.TextColor3 = Color3.fromRGB(255, 0, 0)
+glitch.Font = Enum.Font.Code
+glitch.TextSize = 16
+glitch.MouseButton1Click:Connect(function()
+	local invert = Instance.new("ColorCorrectionEffect", game.Lighting)
+	invert.TintColor = Color3.fromRGB(255, 0, 0)
+	invert.Contrast = -1
+	invert.Saturation = -1
 end)
