@@ -1,176 +1,102 @@
-local gui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
-local senhaCorreta = "Vø!d6#X_Çørr0p!d0"
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local player = Players.LocalPlayer
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "VoidReaperHub"
 
--- Tela piscando com frase final
-local function telaSistemaCorrompido()
-    local tela = Instance.new("Frame", gui)
-    tela.Size = UDim2.new(1, 0, 1, 0)
-    tela.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    tela.ZIndex = 10
+local senha = "Vø!d6#X_Çørr0p!d0"
 
-    local texto = Instance.new("TextLabel", tela)
-    texto.Size = UDim2.new(1, 0, 1, 0)
-    texto.Text = "VoidReaper_666X has entered the system.\nPeace is restored."
-    texto.TextColor3 = Color3.fromRGB(255, 0, 0)
-    texto.Font = Enum.Font.Code
-    texto.TextSize = 24
-    texto.BackgroundTransparency = 1
-    texto.TextWrapped = true
-    texto.TextYAlignment = Enum.TextYAlignment.Center
-    texto.ZIndex = 11
-
-    local sound = Instance.new("Sound", tela)
-    sound.SoundId = "rbxassetid://911882310"
-    sound.Volume = 1
-    sound:Play()
-
-    for i = 1, 3 do
-        tela.Visible = true
-        wait(0.3)
-        tela.Visible = false
-        wait(0.2)
-    end
-
-    tela:Destroy()
+local function normalizar(texto)
+	return texto:lower():gsub("ø", "o"):gsub("ç", "c"):gsub("!", ""):gsub("#", ""):gsub(" ", "")
 end
 
--- Prompt de senha
-local function mostrarSenhaPrompt()
-    local prompt = Instance.new("Frame", gui)
-    prompt.Size = UDim2.new(0, 250, 0, 120)
-    prompt.Position = UDim2.new(0.5, -125, 0.5, -60)
-    prompt.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 300, 0, 150)
+frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 
-    local label = Instance.new("TextLabel", prompt)
-    label.Size = UDim2.new(1, 0, 0, 30)
-    label.Position = UDim2.new(0, 0, 0, 5)
-    label.Text = "Digite a senha para acessar"
-    label.TextColor3 = Color3.fromRGB(255, 0, 0)
-    label.Font = Enum.Font.Code
-    label.TextSize = 14
-    label.BackgroundTransparency = 1
+local label = Instance.new("TextLabel", frame)
+label.Size = UDim2.new(1, 0, 0, 30)
+label.Text = "Digite a senha"
+label.TextColor3 = Color3.fromRGB(255, 0, 0)
+label.BackgroundTransparency = 1
+label.Font = Enum.Font.Code
+label.TextSize = 18
 
-    local input = Instance.new("TextBox", prompt)
-    input.Size = UDim2.new(0, 200, 0, 30)
-    input.Position = UDim2.new(0.5, -100, 0, 40)
-    input.PlaceholderText = "Senha..."
-    input.TextColor3 = Color3.fromRGB(0, 255, 0)
-    input.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-    input.Font = Enum.Font.Code
-    input.TextSize = 14
+local input = Instance.new("TextBox", frame)
+input.Size = UDim2.new(0.8, 0, 0, 30)
+input.Position = UDim2.new(0.1, 0, 0, 40)
+input.PlaceholderText = "Senha..."
+input.TextColor3 = Color3.fromRGB(0, 255, 0)
+input.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+input.Font = Enum.Font.Code
+input.TextSize = 16
 
-    local confirmar = Instance.new("TextButton", prompt)
-    confirmar.Size = UDim2.new(0, 80, 0, 25)
-    confirmar.Position = UDim2.new(0.5, -40, 0, 80)
-    confirmar.Text = "Confirmar"
-    confirmar.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-    confirmar.TextColor3 = Color3.fromRGB(0, 255, 0)
-    confirmar.Font = Enum.Font.Code
-    confirmar.TextSize = 13
+local confirmar = Instance.new("TextButton", frame)
+confirmar.Size = UDim2.new(0.5, 0, 0, 30)
+confirmar.Position = UDim2.new(0.25, 0, 0, 90)
+confirmar.Text = "Confirmar"
+confirmar.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+confirmar.TextColor3 = Color3.fromRGB(0, 255, 0)
+confirmar.Font = Enum.Font.Code
+confirmar.TextSize = 16
 
-    confirmar.MouseButton1Click:Connect(function()
-        if input.Text == senhaCorreta then
-            prompt:Destroy()
+confirmar.MouseButton1Click:Connect(function()
+	if normalizar(input.Text) == normalizar(senha) then
+		frame:Destroy()
 
-            -- Tela ACCESS GRANTED
-            local granted = Instance.new("Frame", gui)
-            granted.Size = UDim2.new(0, 300, 0, 100)
-            granted.Position = UDim2.new(0.5, -150, 0.5, -50)
-            granted.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		local char = player.Character or player.CharacterAdded:Wait()
+		local hum = char:FindFirstChildOfClass("Humanoid")
+		local root = char:FindFirstChild("HumanoidRootPart")
+		if hum then
+			hum.WalkSpeed = 100
+			hum.JumpPower = 150
+			hum.MaxHealth = math.huge
+			hum.Health = math.huge
+		end
 
-            local grantedText = Instance.new("TextLabel", granted)
-            grantedText.Size = UDim2.new(1, 0, 1, 0)
-            grantedText.Text = "ACCESS GRANTED"
-            grantedText.TextColor3 = Color3.fromRGB(255, 0, 0)
-            grantedText.Font = Enum.Font.Code
-            grantedText.TextSize = 28
-            grantedText.BackgroundTransparency = 1
+		local aura = Instance.new("Part", char)
+		aura.Size = Vector3.new(8, 8, 8)
+		aura.Shape = Enum.PartType.Ball
+		aura.Material = Enum.Material.Neon
+		aura.Color = Color3.fromRGB(0, 255, 255)
+		aura.Anchored = false
+		aura.CanCollide = false
+		aura.Transparency = 0.4
+		local weld = Instance.new("WeldConstraint", aura)
+		weld.Part0 = aura
+		weld.Part1 = root
 
-            local sound = Instance.new("Sound", granted)
-            sound.SoundId = "rbxassetid://911882310"
-            sound.Volume = 1
-            sound:Play()
+		local light = Instance.new("PointLight", root)
+		light.Color = Color3.fromRGB(0, 255, 255)
+		light.Range = 30
+		light.Brightness = 5
 
-            wait(2)
-            granted:Destroy()
+		local particles = Instance.new("ParticleEmitter", root)
+		particles.Texture = "rbxassetid://243098098"
+		particles.Rate = 50
+		particles.Lifetime = NumberRange.new(2)
+		particles.Speed = NumberRange.new(1)
+		particles.Size = NumberSequence.new(3)
+		particles.Color = ColorSequence.new(Color3.fromRGB(0, 255, 255))
+		particles.LightEmission = 0.5
 
-            -- Tela piscando com frase
-            telaSistemaCorrompido()
-
-            -- Céu corrompido
-            for _, v in pairs(game.Lighting:GetChildren()) do
-                if v:IsA("Sky") then v:Destroy() end
-            end
-            local sky = Instance.new("Sky", game.Lighting)
-            sky.SkyboxBk = "rbxassetid://0"
-            sky.SkyboxDn = "rbxassetid://0"
-            sky.SkyboxFt = "rbxassetid://0"
-            sky.SkyboxLf = "rbxassetid://0"
-            sky.SkyboxRt = "rbxassetid://0"
-            sky.SkyboxUp = "rbxassetid://0"
-            game.Lighting.Ambient = Color3.fromRGB(255, 0, 0)
-            game.Lighting.OutdoorAmbient = Color3.fromRGB(50, 0, 0)
-            game.Lighting.FogColor = Color3.fromRGB(255, 255, 255)
-            game.Lighting.FogEnd = 500
-            game.Lighting.FogStart = 0
-            game.Lighting.ClockTime = 0
-            game.Lighting.Brightness = 1
-
-            -- Buffs e transformação
-            local lp = game.Players.LocalPlayer
-            local char = lp.Character or lp.CharacterAdded:Wait()
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            local root = char:FindFirstChild("HumanoidRootPart")
-            if hum then
-                hum.WalkSpeed = 100
-                hum.JumpPower = 150
-                hum.Health = math.huge
-            end
-            lp.Name = "VoidReaper_666X"
-
-            local aura = Instance.new("Part", char)
-            aura.Size = Vector3.new(8, 8, 8)
-            aura.Shape = Enum.PartType.Ball
-            aura.Material = Enum.Material.Neon
-            aura.Color = Color3.fromRGB(0, 255, 255)
-            aura.Anchored = true
-            aura.CanCollide = false
-            aura.Transparency = 0.4
-            local weld = Instance.new("WeldConstraint", aura)
-            weld.Part0 = aura
-            weld.Part1 = root
-
-            local light = Instance.new("PointLight", root)
-            light.Color = Color3.fromRGB(0, 255, 255)
-            light.Range = 30
-            light.Brightness = 5
-
-            local particles = Instance.new("ParticleEmitter", root)
-            particles.Texture = "rbxassetid://243098098"
-            particles.Rate = 50
-            particles.Lifetime = NumberRange.new(2)
-            particles.Speed = NumberRange.new(1)
-            particles.Size = NumberSequence.new(3)
-            particles.Color = ColorSequence.new(Color3.fromRGB(0, 255, 255))
-            particles.LightEmission = 0.5
-        else
-            label.Text = "ACCESS DENIED"
-            label.TextColor3 = Color3.fromRGB(255, 0, 0)
-            input.Text = ""
-        end
-    end)
-end
-
--- Botão para abrir Modo Good
-local toggleGood = Instance.new("TextButton", gui)
-toggleGood.Size = UDim2.new(0, 200, 0, 25)
-toggleGood.Position = UDim2.new(0.5, -100, 0.5, 200)
-toggleGood.Text = "Modo Good (protegido)"
-toggleGood.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
-toggleGood.Font = Enum.Font.Code
-toggleGood.TextSize = 13
-
-toggleGood.MouseButton1Click:Connect(function()
-    mostrarSenhaPrompt()
+		for _, v in pairs(Lighting:GetChildren()) do
+			if v:IsA("Sky") then v:Destroy() end
+		end
+		local sky = Instance.new("Sky", Lighting)
+		sky.SkyboxBk = "rbxassetid://0"
+		sky.SkyboxDn = "rbxassetid://0"
+		sky.SkyboxFt = "rbxassetid://0"
+		sky.SkyboxLf = "rbxassetid://0"
+		sky.SkyboxRt = "rbxassetid://0"
+		sky.SkyboxUp = "rbxassetid://0"
+		Lighting.Ambient = Color3.fromRGB(255, 0, 0)
+		Lighting.OutdoorAmbient = Color3.fromRGB(50, 0, 0)
+		Lighting.FogColor = Color3.fromRGB(255, 255, 255)
+		Lighting.FogEnd = 500
+		Lighting.FogStart = 0
+		Lighting.ClockTime = 0
+		Lighting.Brightness = 1
+	end
 end)
