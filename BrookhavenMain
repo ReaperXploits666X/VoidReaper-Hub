@@ -1,383 +1,176 @@
--- VOIDREAPER HUB - VERSÃO HACKER
--- Painel animado, estilo terminal, funções 100% funcionais
+local gui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
+local senhaCorreta = "Void666X_Corr0pido"
 
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
+-- Tela piscando com frase final
+local function telaSistemaCorrompido()
+    local tela = Instance.new("Frame", gui)
+    tela.Size = UDim2.new(1, 0, 1, 0)
+    tela.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    tela.ZIndex = 10
 
-local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "VoidReaperHub"
+    local texto = Instance.new("TextLabel", tela)
+    texto.Size = UDim2.new(1, 0, 1, 0)
+    texto.Text = "VoidReaper_666X has entered the system.\nPeace is restored."
+    texto.TextColor3 = Color3.fromRGB(255, 0, 0)
+    texto.Font = Enum.Font.Code
+    texto.TextSize = 24
+    texto.BackgroundTransparency = 1
+    texto.TextWrapped = true
+    texto.TextYAlignment = Enum.TextYAlignment.Center
+    texto.ZIndex = 11
 
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 0, 0, 0)
-frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-frame.BorderSizePixel = 0
-frame.AnchorPoint = Vector2.new(0.5, 0.5)
-frame.Active = true
-frame.Draggable = true
-
-local glow = Instance.new("UIStroke", frame)
-glow.Thickness = 2
-glow.Color = Color3.fromRGB(0, 255, 0)
-glow.Transparency = 0.2
-glow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {
-    Size = UDim2.new(0, 440, 0, 380),
-    Position = UDim2.new(0.5, -220, 0.5, -190)
-}):Play()
-
-local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, -50, 0, 40)
-title.Position = UDim2.new(0, 10, 0, 5)
-title.Text = "VOIDREAPER HUB"
-title.TextColor3 = Color3.fromRGB(0, 255, 0)
-title.BackgroundTransparency = 1
-title.Font = Enum.Font.Code
-title.TextSize = 22
-title.TextXAlignment = Enum.TextXAlignment.Left
-
-local closeBtn = Instance.new("TextButton", frame)
-closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(1, -35, 0, 5)
-closeBtn.Text = "X"
-closeBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
-closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeBtn.Font = Enum.Font.Code
-closeBtn.TextSize = 16
-closeBtn.MouseButton1Click:Connect(function()
-    frame.Visible = false
-end)
-
-local reopenBtn = Instance.new("TextButton", gui)
-reopenBtn.Size = UDim2.new(0, 140, 0, 30)
-reopenBtn.Position = UDim2.new(0, 10, 0, 10)
-reopenBtn.Text = "Abrir VoidReaper"
-reopenBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-reopenBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
-reopenBtn.Font = Enum.Font.Code
-reopenBtn.TextSize = 14
-reopenBtn.MouseButton1Click:Connect(function()
-    frame.Visible = true
-    TweenService:Create(frame, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {
-        Position = UDim2.new(0.5, -220, 0.5, -190)
-    }):Play()
-end)
-
--- Lista de jogadores
-local listFrame = Instance.new("Frame", frame)
-listFrame.Size = UDim2.new(0, 180, 0, 30)
-listFrame.Position = UDim2.new(0, 10, 0, 50)
-listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-listFrame.BorderSizePixel = 1
-
-local toggleList = Instance.new("TextButton", listFrame)
-toggleList.Size = UDim2.new(1, 0, 1, 0)
-toggleList.Text = "Mostrar Jogadores"
-toggleList.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-toggleList.TextColor3 = Color3.fromRGB(0, 255, 0)
-toggleList.Font = Enum.Font.Code
-toggleList.TextSize = 13
-
-local playerList = Instance.new("ScrollingFrame", frame)
-playerList.Size = UDim2.new(0, 180, 0, 120)
-playerList.Position = UDim2.new(0, 10, 0, 85)
-playerList.CanvasSize = UDim2.new(0, 0, 0, 0)
-playerList.ScrollBarThickness = 6
-playerList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-playerList.BorderSizePixel = 1
-playerList.Visible = false
-
-toggleList.MouseButton1Click:Connect(function()
-    playerList.Visible = not playerList.Visible
-end)
-
-local selectedPlayer = nil
-
-local function updatePlayerList()
-    playerList:ClearAllChildren()
-    local y = 0
-    for _, plr in pairs(Players:GetPlayers()) do
-        local btn = Instance.new("TextButton", playerList)
-        btn.Size = UDim2.new(1, -10, 0, 25)
-        btn.Position = UDim2.new(0, 5, 0, y)
-        btn.Text = plr.Name
-        btn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
-        btn.TextColor3 = Color3.fromRGB(0, 255, 0)
-        btn.Font = Enum.Font.Code
-        btn.TextSize = 12
-        btn.BorderSizePixel = 0
-
-        btn.MouseButton1Click:Connect(function()
-            selectedPlayer = plr
-        end)
-
-        y = y + 30
-    end
-    playerList.CanvasSize = UDim2.new(0, 0, 0, y)
-end
-
-updatePlayerList()
-Players.PlayerAdded:Connect(function() wait(1) updatePlayerList() end)
-Players.PlayerRemoving:Connect(function() wait(1) updatePlayerList() end)
-
-local function createButton(text, posY, callback)
-    local btn = Instance.new("TextButton", frame)
-    btn.Size = UDim2.new(0, 200, 0, 25)
-    btn.Position = UDim2.new(0, 220, 0, posY)
-    btn.Text = text
-    btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-    btn.TextColor3 = Color3.fromRGB(0, 255, 0)
-    btn.Font = Enum.Font.Code
-    btn.TextSize = 12
-    btn.BorderSizePixel = 0
-
-    btn.MouseEnter:Connect(function()
-        btn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-        btn.TextColor3 = Color3.fromRGB(0, 0, 0)
-    end)
-    btn.MouseLeave:Connect(function()
-        btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-        btn.TextColor3 = Color3.fromRGB(0, 255, 0)
-    end)
-
-    btn.MouseButton1Click:Connect(callback)
-end
-
-createButton("Troll Jogador", 50, function()
-    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        selectedPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(9999, -9999, 9999)
-    end
-end)
-
-createButton("Jaula Tubers93", 80, function()
-    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local root = selectedPlayer.Character.HumanoidRootPart
-        local size = 6
-        for x = -1, 1 do
-            for y = 0, 2 do
-                for z = -1, 1 do
-                    if x == 0 and z == 0 and y ~= 2 then continue end
-                    local part = Instance.new("Part", workspace)
-                    part.Size = Vector3.new(size, size, size)
-                    part.Position = root.Position + Vector3.new(x * size, y * size, z * size)
-                    part.Anchored = true
-                    part.Material = Enum.Material.ForceField
-                    part.Color = Color3.fromRGB(255, 0, 0)
-                    part.CanCollide = true
-                end
-            end
-        end
-    end
-end)
-
-createButton("Teleportar até Jogador", 110, function()
-    local lp = game.Players.LocalPlayer
-    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        lp.Character.HumanoidRootPart.CFrame = selectedPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(2, 0, 2)
-    end
-end)
-
-createButton("Lag Player", 140, function()
-    if selectedPlayer and selectedPlayer.Character then
-        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
-        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if hum then
-            hum.WalkSpeed = 0
-            hum.JumpPower = 0
-            hum.AutoRotate = false
-        end
-        if root then
-            root.Anchored = true
-        end
-    end
-end)
-
-createButton("Modo Void Visual", 170, function()
-    local dome = Instance.new("Part", workspace)
-    dome.Size = Vector3.new(2000, 1, 2000)
-    dome.Position = Vector3.new(0, 300, 0)
-    dome.Anchored = true
-    dome.Color = Color3.fromRGB(0, 0, 0)
-    dome.Material = Enum.Material.SmoothPlastic
-    dome.Transparency = 0.2
-    dome.Name = "VoidDome"
-
-    local fog = Instance.new("ParticleEmitter", dome)
-    fog.Texture = "rbxassetid://243098098"
-    fog.Rate = 100
-    fog.Lifetime = NumberRange.new(5)
-    fog.Speed = NumberRange.new(2)
-    fog.Size = NumberSequence.new(10)
-    fog.Color = ColorSequence.new(Color3.fromRGB(0, 0, 0))
-    fog.LightEmission = 0
-    fog.Enabled = true
-
-    local light = Instance.new("PointLight", dome)
-    light.Color = Color3.fromRGB(255, 0, 0)
-    light.Range = 1000
-    light.Brightness = 10
-end)
-
-createButton("Som Tubers93", 200, function()
-    local sound = Instance.new("Sound", workspace)
+    local sound = Instance.new("Sound", tela)
     sound.SoundId = "rbxassetid://911882310"
-    sound.Volume = 10
-    sound.PlayOnRemove = true
-    sound:Destroy()
-end)
+    sound.Volume = 1
+    sound:Play()
 
-createButton("Congelar para sempre", 230, function()
-    if selectedPlayer and selectedPlayer.Character then
-        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
-        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if hum then
-            hum.WalkSpeed = 0
-            hum.JumpPower = 0
-            hum.AutoRotate = false
-            hum.PlatformStand = true
-        end
-        if root then
-            root.Anchored = true
-        end
-
-        while selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") do
-            local h = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
-            local r = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-            if h then
-                h.WalkSpeed = 0
-                h.JumpPower = 0
-                h.AutoRotate = false
-                h.PlatformStand = true
-            end
-            if r then
-                r.Anchored = true
-            end
-            wait(1)
-        end
+    for i = 1, 3 do
+        tela.Visible = true
+        wait(0.3)
+        tela.Visible = false
+        wait(0.2)
     end
-end)
 
-local toggleGood = Instance.new("TextButton", frame)
+    tela:Destroy()
+end
+
+-- Prompt de senha
+local function mostrarSenhaPrompt()
+    local prompt = Instance.new("Frame", gui)
+    prompt.Size = UDim2.new(0, 250, 0, 120)
+    prompt.Position = UDim2.new(0.5, -125, 0.5, -60)
+    prompt.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+
+    local label = Instance.new("TextLabel", prompt)
+    label.Size = UDim2.new(1, 0, 0, 30)
+    label.Position = UDim2.new(0, 0, 0, 5)
+    label.Text = "Digite a senha para acessar"
+    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+    label.Font = Enum.Font.Code
+    label.TextSize = 14
+    label.BackgroundTransparency = 1
+
+    local input = Instance.new("TextBox", prompt)
+    input.Size = UDim2.new(0, 200, 0, 30)
+    input.Position = UDim2.new(0.5, -100, 0, 40)
+    input.PlaceholderText = "Senha..."
+    input.TextColor3 = Color3.fromRGB(0, 255, 0)
+    input.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+    input.Font = Enum.Font.Code
+    input.TextSize = 14
+
+    local confirmar = Instance.new("TextButton", prompt)
+    confirmar.Size = UDim2.new(0, 80, 0, 25)
+    confirmar.Position = UDim2.new(0.5, -40, 0, 80)
+    confirmar.Text = "Confirmar"
+    confirmar.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+    confirmar.TextColor3 = Color3.fromRGB(0, 255, 0)
+    confirmar.Font = Enum.Font.Code
+    confirmar.TextSize = 13
+
+    confirmar.MouseButton1Click:Connect(function()
+        if input.Text == senhaCorreta then
+            prompt:Destroy()
+
+            -- Tela ACCESS GRANTED
+            local granted = Instance.new("Frame", gui)
+            granted.Size = UDim2.new(0, 300, 0, 100)
+            granted.Position = UDim2.new(0.5, -150, 0.5, -50)
+            granted.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+
+            local grantedText = Instance.new("TextLabel", granted)
+            grantedText.Size = UDim2.new(1, 0, 1, 0)
+            grantedText.Text = "ACCESS GRANTED"
+            grantedText.TextColor3 = Color3.fromRGB(255, 0, 0)
+            grantedText.Font = Enum.Font.Code
+            grantedText.TextSize = 28
+            grantedText.BackgroundTransparency = 1
+
+            local sound = Instance.new("Sound", granted)
+            sound.SoundId = "rbxassetid://911882310"
+            sound.Volume = 1
+            sound:Play()
+
+            wait(2)
+            granted:Destroy()
+
+            -- Tela piscando com frase
+            telaSistemaCorrompido()
+
+            -- Céu corrompido
+            for _, v in pairs(game.Lighting:GetChildren()) do
+                if v:IsA("Sky") then v:Destroy() end
+            end
+            local sky = Instance.new("Sky", game.Lighting)
+            sky.SkyboxBk = "rbxassetid://0"
+            sky.SkyboxDn = "rbxassetid://0"
+            sky.SkyboxFt = "rbxassetid://0"
+            sky.SkyboxLf = "rbxassetid://0"
+            sky.SkyboxRt = "rbxassetid://0"
+            sky.SkyboxUp = "rbxassetid://0"
+            game.Lighting.Ambient = Color3.fromRGB(255, 0, 0)
+            game.Lighting.OutdoorAmbient = Color3.fromRGB(50, 0, 0)
+            game.Lighting.FogColor = Color3.fromRGB(255, 255, 255)
+            game.Lighting.FogEnd = 500
+            game.Lighting.FogStart = 0
+            game.Lighting.ClockTime = 0
+            game.Lighting.Brightness = 1
+
+            -- Buffs e transformação
+            local lp = game.Players.LocalPlayer
+            local char = lp.Character or lp.CharacterAdded:Wait()
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            local root = char:FindFirstChild("HumanoidRootPart")
+            if hum then
+                hum.WalkSpeed = 100
+                hum.JumpPower = 150
+                hum.Health = math.huge
+            end
+            lp.Name = "VoidReaper_666X"
+
+            local aura = Instance.new("Part", char)
+            aura.Size = Vector3.new(8, 8, 8)
+            aura.Shape = Enum.PartType.Ball
+            aura.Material = Enum.Material.Neon
+            aura.Color = Color3.fromRGB(0, 255, 255)
+            aura.Anchored = true
+            aura.CanCollide = false
+            aura.Transparency = 0.4
+            local weld = Instance.new("WeldConstraint", aura)
+            weld.Part0 = aura
+            weld.Part1 = root
+
+            local light = Instance.new("PointLight", root)
+            light.Color = Color3.fromRGB(0, 255, 255)
+            light.Range = 30
+            light.Brightness = 5
+
+            local particles = Instance.new("ParticleEmitter", root)
+            particles.Texture = "rbxassetid://243098098"
+            particles.Rate = 50
+            particles.Lifetime = NumberRange.new(2)
+            particles.Speed = NumberRange.new(1)
+            particles.Size = NumberSequence.new(3)
+            particles.Color = ColorSequence.new(Color3.fromRGB(0, 255, 255))
+            particles.LightEmission = 0.5
+        else
+            label.Text = "ACCESS DENIED"
+            label.TextColor3 = Color3.fromRGB(255, 0, 0)
+            input.Text = ""
+        end
+    end)
+end
+
+-- Botão para abrir Modo Good
+local toggleGood = Instance.new("TextButton", gui)
 toggleGood.Size = UDim2.new(0, 200, 0, 25)
-toggleGood.Position = UDim2.new(0, 220, 0, 270)
-toggleGood.Text = "Modo Good"
+toggleGood.Position = UDim2.new(0.5, -100, 0.5, 200)
+toggleGood.Text = "Modo Good (protegido)"
 toggleGood.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
 toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
 toggleGood.Font = Enum.Font.Code
 toggleGood.TextSize = 13
-toggleGood.BorderSizePixel = 0
-
-toggleGood.MouseEnter:Connect(function()
-    toggleGood.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-    toggleGood.TextColor3 = Color3.fromRGB(0, 0, 0)
-end)
-toggleGood.MouseLeave:Connect(function()
-    toggleGood.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-    toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
-end)
-
-local goodList = Instance.new("Frame", frame)
-goodList.Size = UDim2.new(0, 200, 0, 130)
-goodList.Position = UDim2.new(0, 220, 0, 305)
-goodList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-goodList.BorderSizePixel = 1
-goodList.Visible = false
-
-local glow = Instance.new("UIStroke", goodList)
-glow.Thickness = 2
-glow.Color = Color3.fromRGB(0, 255, 0)
-glow.Transparency = 0.3
-glow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 toggleGood.MouseButton1Click:Connect(function()
-    goodList.Visible = not goodList.Visible
-    if goodList.Visible then
-        TweenService:Create(goodList, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
-            Position = UDim2.new(0, 220, 0, 305)
-        }):Play()
-    end
-end)
-
-local function createGoodButton(text, posY, callback)
-    local btn = Instance.new("TextButton", goodList)
-    btn.Size = UDim2.new(0, 190, 0, 22)
-    btn.Position = UDim2.new(0, 5, 0, posY)
-    btn.Text = text
-    btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-    btn.TextColor3 = Color3.fromRGB(0, 255, 0)
-    btn.Font = Enum.Font.Code
-    btn.TextSize = 11
-    btn.BorderSizePixel = 0
-
-    btn.MouseEnter:Connect(function()
-        btn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-        btn.TextColor3 = Color3.fromRGB(0, 0, 0)
-    end)
-    btn.MouseLeave:Connect(function()
-        btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-        btn.TextColor3 = Color3.fromRGB(0, 255, 0)
-    end)
-
-    btn.MouseButton1Click:Connect(callback)
-end
-
-createGoodButton("Descongelar Jogador", 0, function()
-    if selectedPlayer and selectedPlayer.Character then
-        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
-        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if hum then
-            hum.WalkSpeed = 16
-            hum.JumpPower = 50
-            hum.AutoRotate = true
-            hum.PlatformStand = false
-        end
-        if root then
-            root.Anchored = false
-        end
-    end
-end)
-
-createGoodButton("Explodir o Mapa", 25, function()
-    for _, part in pairs(workspace:GetDescendants()) do
-        if part:IsA("BasePart") and not part:IsDescendantOf(game.Players.LocalPlayer.Character) then
-            part.Anchored = false
-            part.Velocity = Vector3.new(math.random(-500, 500), math.random(500, 1000), math.random(-500, 500))
-        end
-    end
-end)
-
-createGoodButton("Restaurar Visual", 50, function()
-    for _, obj in pairs(workspace:GetChildren()) do
-        if obj.Name == "VoidDome" then
-            obj:Destroy()
-        end
-    end
-end)
-
-createGoodButton("Falar como Jogador", 75, function()
-    if selectedPlayer then
-        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
-            selectedPlayer.Name .. " diz: Eu sou Tubers93", "All"
-        )
-    end
-end)
-
-createGoodButton("Congelar Todos (exceto eu)", 100, function()
-    local lp = game.Players.LocalPlayer
-    for _, plr in pairs(game.Players:GetPlayers()) do
-        if plr ~= lp and plr.Character then
-            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
-            local root = plr.Character:FindFirstChild("HumanoidRootPart")
-            if hum then
-                hum.WalkSpeed = 0
-                hum.JumpPower = 0
-                hum.AutoRotate = false
-                hum.PlatformStand = true
-            end
-            if root then
-                root.Anchored = true
-            end
-        end
-    end
+    mostrarSenhaPrompt()
 end)
