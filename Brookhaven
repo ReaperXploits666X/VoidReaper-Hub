@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/MineBloxYT/VoidReaper-Hub/main/Brookhaven",true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MineBloxYT/VoidReaper-Hub/main/BrookhavenMain",true))()
