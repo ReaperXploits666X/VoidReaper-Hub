@@ -3,8 +3,8 @@ local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "VoidReaperHub"
 
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 450, 0, 320)
-frame.Position = UDim2.new(0.5, -225, 0.5, -160)
+frame.Size = UDim2.new(0, 450, 0, 500)
+frame.Position = UDim2.new(0.5, -225, 0.5, -250)
 frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 frame.BorderSizePixel = 2
 frame.Active = true
@@ -91,101 +91,7 @@ for i, plr in pairs(game.Players:GetPlayers()) do
 end
 playerList.CanvasSize = UDim2.new(0, 0, 0, #game.Players:GetPlayers() * 30)
 
-local function createButton(text, posY, callback)
-    local btn = Instance.new("TextButton", frame)
-    btn.Size = UDim2.new(0, 200, 0, 25)
-    btn.Position = UDim2.new(0, 230, 0, posY)
-    btn.Text = text
-    btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-    btn.TextColor3 = Color3.fromRGB(255, 0, 0)
-    btn.Font = Enum.Font.Gotham
-    btn.TextSize = 12
-    btn.MouseButton1Click:Connect(callback)
-end
-
-createButton("Troll Jogador", 45, function()
-    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        selectedPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(9999, -9999, 9999)
-    end
-end)
-
-createButton("Jaula Tubers93", 75, function()
-    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local cage = Instance.new("Part", workspace)
-        cage.Size = Vector3.new(6, 6, 6)
-        cage.Position = selectedPlayer.Character.HumanoidRootPart.Position
-        cage.Anchored = true
-        cage.Color = Color3.fromRGB(255, 0, 0)
-        cage.Material = Enum.Material.ForceField
-
-        local light = Instance.new("PointLight", cage)
-        light.Color = Color3.fromRGB(255, 0, 0)
-        light.Range = 20
-        light.Brightness = 5
-    end
-end)
-
-createButton("Teleportar até Jogador", 105, function()
-    local lp = game.Players.LocalPlayer
-    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        lp.Character.HumanoidRootPart.CFrame = selectedPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(2, 0, 2)
-    end
-end)
-
-createButton("Lag Player", 135, function()
-    if selectedPlayer and selectedPlayer.Character then
-        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
-        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if hum then
-            hum.WalkSpeed = 0
-            hum.JumpPower = 0
-            hum.AutoRotate = false
-        end
-        if root then
-            root.Anchored = true
-        end
-    end
-end)
-
-createButton("Modo Void Visual", 165, function()
-    local dome = Instance.new("Part", workspace)
-    dome.Size = Vector3.new(1000, 1, 1000)
-    dome.Position = Vector3.new(0, 300, 0)
-    dome.Anchored = true
-    dome.Color = Color3.fromRGB(0, 0, 0)
-    dome.Material = Enum.Material.SmoothPlastic
-    dome.Transparency = 0.3
-    dome.Name = "VoidDome"
-
-    for i = 1, 10 do
-        local fog = Instance.new("ParticleEmitter", dome)
-        fog.Texture = "rbxassetid://243098098"
-        fog.Rate = 50
-        fog.Lifetime = NumberRange.new(5)
-        fog.Speed = NumberRange.new(2)
-        fog.Size = NumberSequence.new(10)
-        fog.Color = ColorSequence.new(Color3.fromRGB(0, 0, 0))
-        fog.LightEmission = 0
-        fog.Enabled = true
-    end
-
-    local light = Instance.new("PointLight", dome)
-    light.Color = Color3.fromRGB(255, 0, 0)
-    light.Range = 1000
-    light.Brightness = 10
-end)
-
-createButton("Som Tubers93", 195, function()
-    local sound = Instance.new("Sound", workspace)
-    sound.SoundId = "rbxassetid://911882310"
-    sound.Volume = 10
-    sound.PlayOnRemove = true
-    sound:Destroy()
-end)
-
-createButton("Invasão Tubers93", 225, function()
-
--- Botão "Modo Good" para abrir/fechar a lista
+-- Botão "Modo Good"
 local toggleGood = Instance.new("TextButton", frame)
 toggleGood.Size = UDim2.new(0, 200, 0, 25)
 toggleGood.Position = UDim2.new(0, 230, 0, 45)
@@ -195,7 +101,7 @@ toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
 toggleGood.Font = Enum.Font.GothamBold
 toggleGood.TextSize = 14
 
--- Lista suspensa com botões extras
+-- Lista suspensa
 local goodList = Instance.new("Frame", frame)
 goodList.Size = UDim2.new(0, 200, 0, 150)
 goodList.Position = UDim2.new(0, 230, 0, 75)
@@ -203,12 +109,10 @@ goodList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 goodList.BorderSizePixel = 1
 goodList.Visible = false
 
--- Alternar visibilidade da lista
 toggleGood.MouseButton1Click:Connect(function()
     goodList.Visible = not goodList.Visible
 end)
 
--- Função para criar botões dentro da lista "Modo Good"
 local function createGoodButton(text, posY, callback)
     local btn = Instance.new("TextButton", goodList)
     btn.Size = UDim2.new(0, 190, 0, 25)
@@ -222,7 +126,7 @@ local function createGoodButton(text, posY, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
--- Botões dentro do menu "Modo Good"
+-- Botões extras
 createGoodButton("Descongelar Jogador", 0, function()
     if selectedPlayer and selectedPlayer.Character then
         local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
