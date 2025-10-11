@@ -185,20 +185,17 @@ end)
 
 createButton("Invasão Tubers93", 225, function()
 
-local goodFrame = Instance.new("Frame", frame)
-goodFrame.Size = UDim2.new(0, 200, 0, 25)
-goodFrame.Position = UDim2.new(0, 230, 0, 45)
-goodFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-goodFrame.BorderSizePixel = 1
-
-local toggleGood = Instance.new("TextButton", goodFrame)
-toggleGood.Size = UDim2.new(1, 0, 1, 0)
+-- Botão para abrir/fechar a lista "Modo Good"
+local toggleGood = Instance.new("TextButton", frame)
+toggleGood.Size = UDim2.new(0, 200, 0, 25)
+toggleGood.Position = UDim2.new(0, 230, 0, 45)
 toggleGood.Text = "Modo Good"
 toggleGood.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
 toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
-toggleGood.Font = Enum.Font.Gotham
+toggleGood.Font = Enum.Font.GothamBold
 toggleGood.TextSize = 14
 
+-- Lista suspensa com botões extras
 local goodList = Instance.new("Frame", frame)
 goodList.Size = UDim2.new(0, 200, 0, 150)
 goodList.Position = UDim2.new(0, 230, 0, 75)
@@ -206,10 +203,12 @@ goodList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 goodList.BorderSizePixel = 1
 goodList.Visible = false
 
+-- Alternar visibilidade da lista
 toggleGood.MouseButton1Click:Connect(function()
     goodList.Visible = not goodList.Visible
 end)
 
+-- Função para criar botões dentro da lista "Modo Good"
 local function createGoodButton(text, posY, callback)
     local btn = Instance.new("TextButton", goodList)
     btn.Size = UDim2.new(0, 190, 0, 25)
@@ -219,6 +218,7 @@ local function createGoodButton(text, posY, callback)
     btn.TextColor3 = Color3.fromRGB(0, 255, 0)
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 12
+    btn.BorderSizePixel = 0
     btn.MouseButton1Click:Connect(callback)
 end
 
