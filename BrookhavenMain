@@ -185,46 +185,44 @@ end)
 
 createButton("Invasão Tubers93", 225, function()
 
-for i = 1, 5 do
-        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
-            "⚠️ VoidReaper Hub ativado por Tubers93", "All"
-        )
-        wait(1)
-    end
+local goodFrame = Instance.new("Frame", frame)
+goodFrame.Size = UDim2.new(0, 200, 0, 25)
+goodFrame.Position = UDim2.new(0, 230, 0, 45)
+goodFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+goodFrame.BorderSizePixel = 1
+
+local toggleGood = Instance.new("TextButton", goodFrame)
+toggleGood.Size = UDim2.new(1, 0, 1, 0)
+toggleGood.Text = "Modo Good"
+toggleGood.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
+toggleGood.Font = Enum.Font.Gotham
+toggleGood.TextSize = 14
+
+local goodList = Instance.new("Frame", frame)
+goodList.Size = UDim2.new(0, 200, 0, 150)
+goodList.Position = UDim2.new(0, 230, 0, 75)
+goodList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+goodList.BorderSizePixel = 1
+goodList.Visible = false
+
+toggleGood.MouseButton1Click:Connect(function()
+    goodList.Visible = not goodList.Visible
 end)
 
-createButton("Congelar para sempre", 255, function()
-    if selectedPlayer and selectedPlayer.Character then
-        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
-        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if hum then
-            hum.WalkSpeed = 0
-            hum.JumpPower = 0
-            hum.AutoRotate = false
-            hum.PlatformStand = true
-        end
-        if root then
-            root.Anchored = true
-        end
+local function createGoodButton(text, posY, callback)
+    local btn = Instance.new("TextButton", goodList)
+    btn.Size = UDim2.new(0, 190, 0, 25)
+    btn.Position = UDim2.new(0, 5, 0, posY)
+    btn.Text = text
+    btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+    btn.TextColor3 = Color3.fromRGB(0, 255, 0)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 12
+    btn.MouseButton1Click:Connect(callback)
+end
 
-        while selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") do
-            local h = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
-            local r = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-            if h then
-                h.WalkSpeed = 0
-                h.JumpPower = 0
-                h.AutoRotate = false
-                h.PlatformStand = true
-            end
-            if r then
-                r.Anchored = true
-            end
-            wait(1)
-        end
-    end
-end)
-
-createButton("Descongelar Jogador", 285, function()
+createGoodButton("Descongelar Jogador", 0, function()
     if selectedPlayer and selectedPlayer.Character then
         local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
         local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -240,7 +238,7 @@ createButton("Descongelar Jogador", 285, function()
     end
 end)
 
-createButton("Explodir o Mapa", 315, function()
+createGoodButton("Explodir o Mapa", 30, function()
     for _, part in pairs(workspace:GetDescendants()) do
         if part:IsA("BasePart") and not part:IsDescendantOf(game.Players.LocalPlayer.Character) then
             part.Anchored = false
@@ -249,7 +247,7 @@ createButton("Explodir o Mapa", 315, function()
     end
 end)
 
-createButton("Restaurar Visual", 345, function()
+createGoodButton("Restaurar Visual", 60, function()
     for _, obj in pairs(workspace:GetChildren()) do
         if obj.Name == "VoidDome" then
             obj:Destroy()
@@ -257,7 +255,7 @@ createButton("Restaurar Visual", 345, function()
     end
 end)
 
-createButton("Falar como Jogador", 375, function()
+createGoodButton("Falar como Jogador", 90, function()
     if selectedPlayer then
         game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
             selectedPlayer.Name .. " diz: Eu sou Tubers93", "All"
@@ -265,7 +263,7 @@ createButton("Falar como Jogador", 375, function()
     end
 end)
 
-createButton("Congelar Todos", 405, function()
+createGoodButton("Congelar Todos", 120, function()
     for _, plr in pairs(game.Players:GetPlayers()) do
         if plr.Character then
             local hum = plr.Character:FindFirstChildOfClass("Humanoid")
