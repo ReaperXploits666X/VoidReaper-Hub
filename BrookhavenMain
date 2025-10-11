@@ -1,4 +1,3 @@
--- VoidReaper-Hub Versão X — Parte 1
 local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "VoidReaperHub"
 
@@ -91,101 +90,138 @@ for i, plr in pairs(game.Players:GetPlayers()) do
 end
 playerList.CanvasSize = UDim2.new(0, 0, 0, #game.Players:GetPlayers() * 30)
 
-local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "VoidReaperHub"
-
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 450, 0, 500)
-frame.Position = UDim2.new(0.5, -225, 0.5, -250)
-frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-frame.BorderSizePixel = 2
-frame.Active = true
-frame.Draggable = true
-frame.Visible = true
-
-local title = Instance.new("TextLabel", frame)
-title.Text = "VoidReaper Hub"
-title.Size = UDim2.new(0, 200, 0, 25)
-title.Position = UDim2.new(0, 10, 0, 10)
-title.BackgroundTransparency = 1
-title.TextColor3 = Color3.fromRGB(255, 0, 0)
-title.Font = Enum.Font.GothamBold
-title.TextSize = 18
-title.TextXAlignment = Enum.TextXAlignment.Left
-
-local closeBtn = Instance.new("TextButton", frame)
-closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(1, -35, 0, 5)
-closeBtn.Text = "X"
-closeBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
-closeBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
-closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 16
-closeBtn.MouseButton1Click:Connect(function()
-    frame.Visible = false
-end)
-
-local reopenBtn = Instance.new("TextButton", gui)
-reopenBtn.Size = UDim2.new(0, 120, 0, 30)
-reopenBtn.Position = UDim2.new(0, 10, 0, 10)
-reopenBtn.Text = "Abrir VoidReaper"
-reopenBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
-reopenBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
-reopenBtn.Font = Enum.Font.Gotham
-reopenBtn.TextSize = 14
-reopenBtn.MouseButton1Click:Connect(function()
-    frame.Visible = true
-end)
-
-local listFrame = Instance.new("Frame", frame)
-listFrame.Size = UDim2.new(0, 200, 0, 30)
-listFrame.Position = UDim2.new(0, 10, 0, 45)
-listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-listFrame.BorderSizePixel = 1
-
-local toggleList = Instance.new("TextButton", listFrame)
-toggleList.Size = UDim2.new(1, 0, 1, 0)
-toggleList.Text = "Mostrar Jogadores"
-toggleList.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-toggleList.TextColor3 = Color3.fromRGB(255, 0, 0)
-toggleList.Font = Enum.Font.Gotham
-toggleList.TextSize = 14
-
-local playerList = Instance.new("ScrollingFrame", frame)
-playerList.Size = UDim2.new(0, 200, 0, 140)
-playerList.Position = UDim2.new(0, 10, 0, 75)
-playerList.CanvasSize = UDim2.new(0, 0, 0, 0)
-playerList.ScrollBarThickness = 6
-playerList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-playerList.BorderSizePixel = 1
-playerList.Visible = false
-
-toggleList.MouseButton1Click:Connect(function()
-    playerList.Visible = not playerList.Visible
-end)
-
-local selectedPlayer = nil
-
-for i, plr in pairs(game.Players:GetPlayers()) do
-    local btn = Instance.new("TextButton", playerList)
-    btn.Size = UDim2.new(1, -10, 0, 25)
-    btn.Position = UDim2.new(0, 5, 0, (i - 1) * 30)
-    btn.Text = plr.Name
-    btn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+local function createButton(text, posY, callback)
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(0, 200, 0, 25)
+    btn.Position = UDim2.new(0, 230, 0, posY)
+    btn.Text = text
+    btn.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
     btn.TextColor3 = Color3.fromRGB(255, 0, 0)
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 12
-    btn.BorderSizePixel = 0
-
-    btn.MouseButton1Click:Connect(function()
-        selectedPlayer = plr
-    end)
+    btn.MouseButton1Click:Connect(callback)
 end
-playerList.CanvasSize = UDim2.new(0, 0, 0, #game.Players:GetPlayers() * 30)
 
+-- Botões principais
+createButton("Troll Jogador", 105, function()
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        selectedPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(9999, -9999, 9999)
+    end
+end)
+
+createButton("Jaula Tubers93", 135, function()
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local cage = Instance.new("Part", workspace)
+        cage.Size = Vector3.new(6, 6, 6)
+        cage.Position = selectedPlayer.Character.HumanoidRootPart.Position
+        cage.Anchored = true
+        cage.Color = Color3.fromRGB(255, 0, 0)
+        cage.Material = Enum.Material.ForceField
+
+        local light = Instance.new("PointLight", cage)
+        light.Color = Color3.fromRGB(255, 0, 0)
+        light.Range = 20
+        light.Brightness = 5
+    end
+end)
+
+createButton("Teleportar até Jogador", 165, function()
+    local lp = game.Players.LocalPlayer
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        lp.Character.HumanoidRootPart.CFrame = selectedPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(2, 0, 2)
+    end
+end)
+
+createButton("Lag Player", 195, function()
+    if selectedPlayer and selectedPlayer.Character then
+        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
+        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if hum then
+            hum.WalkSpeed = 0
+            hum.JumpPower = 0
+            hum.AutoRotate = false
+        end
+        if root then
+            root.Anchored = true
+        end
+    end
+end)
+
+createButton("Modo Void Visual", 225, function()
+    local dome = Instance.new("Part", workspace)
+    dome.Size = Vector3.new(1000, 1, 1000)
+    dome.Position = Vector3.new(0, 300, 0)
+    dome.Anchored = true
+    dome.Color = Color3.fromRGB(0, 0, 0)
+    dome.Material = Enum.Material.SmoothPlastic
+    dome.Transparency = 0.3
+    dome.Name = "VoidDome"
+
+    for i = 1, 10 do
+        local fog = Instance.new("ParticleEmitter", dome)
+        fog.Texture = "rbxassetid://243098098"
+        fog.Rate = 50
+        fog.Lifetime = NumberRange.new(5)
+        fog.Speed = NumberRange.new(2)
+        fog.Size = NumberSequence.new(10)
+        fog.Color = ColorSequence.new(Color3.fromRGB(0, 0, 0))
+        fog.LightEmission = 0
+        fog.Enabled = true
+    end
+
+    local light = Instance.new("PointLight", dome)
+    light.Color = Color3.fromRGB(255, 0, 0)
+    light.Range = 1000
+    light.Brightness = 10
+end)
+
+createButton("Som Tubers93", 255, function()
+    local sound = Instance.new("Sound", workspace)
+    sound.SoundId = "rbxassetid
+
+createButton("Som Tubers93", 255, function()
+    local sound = Instance.new("Sound", workspace)
+    sound.SoundId = "rbxassetid://911882310"
+    sound.Volume = 10
+    sound.PlayOnRemove = true
+    sound:Destroy()
+end)
+
+createButton("Congelar para sempre", 285, function()
+    if selectedPlayer and selectedPlayer.Character then
+        local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
+        local root = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if hum then
+            hum.WalkSpeed = 0
+            hum.JumpPower = 0
+            hum.AutoRotate = false
+            hum.PlatformStand = true
+        end
+        if root then
+            root.Anchored = true
+        end
+
+        while selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") do
+            local h = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
+            local r = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if h then
+                h.WalkSpeed = 0
+                h.JumpPower = 0
+                h.AutoRotate = false
+                h.PlatformStand = true
+            end
+            if r then
+                r.Anchored = true
+            end
+            wait(1)
+        end
+    end
+end)
+
+-- Menu recolhível "Modo Good"
 local toggleGood = Instance.new("TextButton", frame)
 toggleGood.Size = UDim2.new(0, 200, 0, 25)
-toggleGood.Position = UDim2.new(0, 230, 0, 45)
+toggleGood.Position = UDim2.new(0, 230, 0, 315)
 toggleGood.Text = "Modo Good"
 toggleGood.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
 toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
@@ -194,7 +230,7 @@ toggleGood.TextSize = 14
 
 local goodList = Instance.new("Frame", frame)
 goodList.Size = UDim2.new(0, 200, 0, 150)
-goodList.Position = UDim2.new(0, 230, 0, 75)
+goodList.Position = UDim2.new(0, 230, 0, 345)
 goodList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 goodList.BorderSizePixel = 1
 goodList.Visible = false
@@ -216,6 +252,7 @@ local function createGoodButton(text, posY, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
+-- Botões do menu "Modo Good"
 createGoodButton("Descongelar Jogador", 0, function()
     if selectedPlayer and selectedPlayer.Character then
         local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
@@ -257,9 +294,10 @@ createGoodButton("Falar como Jogador", 90, function()
     end
 end)
 
-createGoodButton("Congelar Todos", 120, function()
+createGoodButton("Congelar Todos (exceto eu)", 120, function()
+    local lp = game.Players.LocalPlayer
     for _, plr in pairs(game.Players:GetPlayers()) do
-        if plr.Character then
+        if plr ~= lp and plr.Character then
             local hum = plr.Character:FindFirstChildOfClass("Humanoid")
             local root = plr.Character:FindFirstChild("HumanoidRootPart")
             if hum then
