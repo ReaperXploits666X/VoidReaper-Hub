@@ -1,5 +1,5 @@
 local gui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
-local senhaCorreta = "Void666X_Corr0pido"
+local senhaCorreta = "Vø!d6#X_Çørr0p!d0"
 
 -- Tela piscando com frase final
 local function telaSistemaCorrompido()
