@@ -1,49 +1,286 @@
-local Players = game:GetService("Players")
-local Lighting = game:GetService("Lighting")
-local player = Players.LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
-local root = char:WaitForChild("HumanoidRootPart")
-
 local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "VoidReaperHub35"
+gui.Name = "VoidReaperHub4"
 gui.ResetOnSpawn = false
+
+-- Botão abrir/fechar
+local toggle = Instance.new("TextButton", gui)
+toggle.Size = UDim2.new(0, 120, 0, 30)
+toggle.Position = UDim2.new(0, 10, 0, 10)
+toggle.Text = "Abrir Hub"
+toggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+toggle.BorderColor3 = Color3.fromRGB(255, 0, 0)
+toggle.TextColor3 = Color3.fromRGB(255, 0, 0)
+toggle.Font = Enum.Font.Code
+toggle.TextSize = 14
 
 -- Painel principal
 local painel = Instance.new("Frame", gui)
-painel.Size = UDim2.new(0, 400, 0, 300)
-painel.Position = UDim2.new(0.5, -200, 0.5, -150)
+painel.Size = UDim2.new(0, 600, 0, 400)
+painel.Position = UDim2.new(0.5, -300, 0.5, -200)
 painel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 painel.BorderColor3 = Color3.fromRGB(255, 0, 0)
+painel.Visible = false
 painel.Active = true
 painel.Draggable = true
 
+-- Cabeçalho
 local header = Instance.new("TextLabel", painel)
 header.Size = UDim2.new(1, 0, 0, 30)
-header.Text = "VOIDREAPER_666X HUB"
+header.Text = "VOIDREAPER_666X HUB 4.0"
 header.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 header.BorderColor3 = Color3.fromRGB(255, 0, 0)
 header.TextColor3 = Color3.fromRGB(255, 0, 0)
 header.Font = Enum.Font.Code
 header.TextSize = 18
 
--- Botão Modo Good
-local btnGood = Instance.new("TextButton", painel)
-btnGood.Size = UDim2.new(0, 200, 0, 30)
-btnGood.Position = UDim2.new(0, 10, 0, 50)
-btnGood.Text = "Modo Good (senha)"
-btnGood.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-btnGood.BorderColor3 = Color3.fromRGB(255, 0, 0)
-btnGood.TextColor3 = Color3.fromRGB(255, 0, 0)
-btnGood.Font = Enum.Font.Code
-btnGood.TextSize = 14
+-- Botão fechar
+local fechar = Instance.new("TextButton", painel)
+fechar.Size = UDim2.new(0, 30, 0, 30)
+fechar.Position = UDim2.new(1, -35, 0, 0)
+fechar.Text = "X"
+fechar.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+fechar.TextColor3 = Color3.fromRGB(255, 0, 0)
+fechar.Font = Enum.Font.Code
+fechar.TextSize = 16
+fechar.MouseButton1Click:Connect(function()
+	painel.Visible = false
+	toggle.Text = "Abrir Hub"
+end)
 
--- Janela de senha
-local senhaFrame = Instance.new("Frame", gui)
+-- Alternar visibilidade
+toggle.MouseButton1Click:Connect(function()
+	painel.Visible = not painel.Visible
+	toggle.Text = painel.Visible and "Fechar Hub" or "Abrir Hub"
+end)
+
+-- Abas
+local abas = {}
+local nomesAbas = {"Geral", "Jogadores", "Modo Good"}
+for i, nome in ipairs(nomesAbas) do
+	local abaBtn = Instance.new("TextButton", painel)
+	abaBtn.Size = UDim2.new(0, 120, 0, 30)
+	abaBtn.Position = UDim2.new(0, 10 + (i-1)*130, 0, 40)
+	abaBtn.Text = nome
+	abaBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	abaBtn.BorderColor3 = Color3.fromRGB(255, 0, 0)
+	abaBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+	abaBtn.Font = Enum.Font.Code
+	abaBtn.TextSize = 14
+
+	local abaFrame = Instance.new("Frame", painel)
+	abaFrame.Size = UDim2.new(0, 580, 0, 320)
+	abaFrame.Position = UDim2.new(0, 10, 0, 80)
+	abaFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	abaFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
+	abaFrame.Visible = false
+	abas[nome] = abaFrame
+
+	abaBtn.MouseButton1Click:Connect(function()
+		for _, frame in pairs(abas) do frame.Visible = false end
+		abaFrame.Visible = true
+	end)
+end
+
+local abaGeral = painel:FindFirstChild("Geral")
+if not abaGeral then return end
+
+local function criarBotaoGeral(nome, ordem, func)
+	local btn = Instance.new("TextButton", abaGeral)
+	btn.Size = UDim2.new(0, 180, 0, 30)
+	btn.Position = UDim2.new(0, 10 + ((ordem-1)%3)*190, 0, 10 + math.floor((ordem-1)/3)*35)
+	btn.Text = nome
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.BorderColor3 = Color3.fromRGB(255, 0, 0)
+	btn.TextColor3 = Color3.fromRGB(255, 0, 0)
+	btn.Font = Enum.Font.Code
+	btn.TextSize = 14
+	btn.MouseButton1Click:Connect(func)
+end
+
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local root = char:WaitForChild("HumanoidRootPart")
+
+-- Mensagem na tela
+criarBotaoGeral("Mensagem na tela", 1, function()
+	local msg = Instance.new("TextLabel", gui)
+	msg.Size = UDim2.new(1, 0, 0, 50)
+	msg.Position = UDim2.new(0, 0, 0.4, 0)
+	msg.Text = "VOIDREAPER_666X ESTÁ ATIVO"
+	msg.TextColor3 = Color3.fromRGB(255, 0, 0)
+	msg.BackgroundTransparency = 1
+	msg.Font = Enum.Font.Code
+	msg.TextSize = 32
+	wait(3)
+	msg:Destroy()
+end)
+
+-- Mensagem no chat
+criarBotaoGeral("Mensagem no chat", 2, function()
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {
+		Text = "[VOIDREAPER_666X] O sistema foi corrompido.";
+		Color = Color3.fromRGB(255, 0, 0);
+	})
+end)
+
+-- Teleporte para o spawn
+criarBotaoGeral("Teleporte para o spawn", 3, function()
+	if root then
+		root.CFrame = CFrame.new(0, 10, 0)
+	end
+end)
+
+-- Buffs máximos
+criarBotaoGeral("Buffs máximos", 4, function()
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if hum then
+		hum.WalkSpeed = 100
+		hum.JumpPower = 150
+		hum.MaxHealth = math.huge
+		hum.Health = math.huge
+	end
+end)
+
+-- Aura vermelha
+criarBotaoGeral("Aura vermelha", 5, function()
+	local aura = Instance.new("Part", char)
+	aura.Size = Vector3.new(6, 6, 6)
+	aura.Shape = Enum.PartType.Ball
+	aura.Material = Enum.Material.Neon
+	aura.Color = Color3.fromRGB(255, 0, 0)
+	aura.Anchored = false
+	aura.CanCollide = false
+	aura.Transparency = 0.5
+	local weld = Instance.new("WeldConstraint", aura)
+	weld.Part0 = aura
+	weld.Part1 = root
+end)
+
+-- Corromper céu
+criarBotaoGeral("Corromper céu", 6, function()
+	for _, v in pairs(Lighting:GetChildren()) do
+		if v:IsA("Sky") then v:Destroy() end
+	end
+	local sky = Instance.new("Sky", Lighting)
+	sky.SkyboxBk = "rbxassetid://0"
+	sky.SkyboxDn = "rbxassetid://0"
+	sky.SkyboxFt = "rbxassetid://0"
+	sky.SkyboxLf = "rbxassetid://0"
+	sky.SkyboxRt = "rbxassetid://0"
+	sky.SkyboxUp = "rbxassetid://0"
+	Lighting.Ambient = Color3.fromRGB(255, 0, 0)
+	Lighting.OutdoorAmbient = Color3.fromRGB(50, 0, 0)
+end)
+
+local abaJogadores = painel:FindFirstChild("Jogadores")
+if not abaJogadores then return end
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local lista = Instance.new("ScrollingFrame", abaJogadores)
+lista.Size = UDim2.new(1, -20, 1, -20)
+lista.Position = UDim2.new(0, 10, 0, 10)
+lista.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+lista.BorderColor3 = Color3.fromRGB(255, 0, 0)
+lista.CanvasSize = UDim2.new(0, 0, 0, 0)
+lista.ScrollBarThickness = 6
+
+local layout = Instance.new("UIListLayout", lista)
+layout.Padding = UDim.new(0, 5)
+
+local function criarLinha(plr)
+	local linha = Instance.new("Frame", lista)
+	linha.Size = UDim2.new(1, -10, 0, 40)
+	linha.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	linha.BorderColor3 = Color3.fromRGB(255, 0, 0)
+
+	local nome = Instance.new("TextLabel", linha)
+	nome.Size = UDim2.new(0.4, 0, 1, 0)
+	nome.Text = plr.Name
+	nome.TextColor3 = Color3.fromRGB(255, 0, 0)
+	nome.BackgroundTransparency = 1
+	nome.Font = Enum.Font.Code
+	nome.TextSize = 14
+
+	local tp = Instance.new("TextButton", linha)
+	tp.Size = UDim2.new(0.2, 0, 1, 0)
+	tp.Position = UDim2.new(0.4, 0, 0, 0)
+	tp.Text = "TP"
+	tp.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	tp.BorderColor3 = Color3.fromRGB(255, 0, 0)
+	tp.TextColor3 = Color3.fromRGB(255, 0, 0)
+	tp.Font = Enum.Font.Code
+	tp.TextSize = 14
+	tp.MouseButton1Click:Connect(function()
+		local root = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+		local myRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+		if root and myRoot then
+			myRoot.CFrame = root.CFrame + Vector3.new(0, 3, 0)
+		end
+	end)
+
+	local aura = Instance.new("TextButton", linha)
+	aura.Size = UDim2.new(0.2, 0, 1, 0)
+	aura.Position = UDim2.new(0.6, 0, 0, 0)
+	aura.Text = "Aura"
+	aura.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	aura.BorderColor3 = Color3.fromRGB(255, 0, 0)
+	aura.TextColor3 = Color3.fromRGB(255, 0, 0)
+	aura.Font = Enum.Font.Code
+	aura.TextSize = 14
+	aura.MouseButton1Click:Connect(function()
+		local root = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+		if root then
+			local auraPart = Instance.new("Part", plr.Character)
+			auraPart.Size = Vector3.new(6, 6, 6)
+			auraPart.Shape = Enum.PartType.Ball
+			auraPart.Material = Enum.Material.Neon
+			auraPart.Color = Color3.fromRGB(255, 0, 0)
+			auraPart.Anchored = false
+			auraPart.CanCollide = false
+			auraPart.Transparency = 0.5
+			local weld = Instance.new("WeldConstraint", auraPart)
+			weld.Part0 = auraPart
+			weld.Part1 = root
+		end
+	end)
+
+	local msg = Instance.new("TextButton", linha)
+	msg.Size = UDim2.new(0.2, 0, 1, 0)
+	msg.Position = UDim2.new(0.8, 0, 0, 0)
+	msg.Text = "MSG"
+	msg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	msg.BorderColor3 = Color3.fromRGB(255, 0, 0)
+	msg.TextColor3 = Color3.fromRGB(255, 0, 0)
+	msg.Font = Enum.Font.Code
+	msg.TextSize = 14
+	msg.MouseButton1Click:Connect(function()
+		game.StarterGui:SetCore("ChatMakeSystemMessage", {
+			Text = "[VOIDREAPER_666X] " .. plr.Name .. " foi marcado.";
+			Color = Color3.fromRGB(255, 0, 0);
+		})
+	end)
+end
+
+for _, plr in ipairs(Players:GetPlayers()) do
+	criarLinha(plr)
+end
+
+Players.PlayerAdded:Connect(function(plr)
+	criarLinha(plr)
+end)
+
+local abaGood = painel:FindFirstChild("Modo Good")
+if not abaGood then return end
+
+local senhaFrame = Instance.new("Frame", abaGood)
 senhaFrame.Size = UDim2.new(0, 300, 0, 150)
-senhaFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+senhaFrame.Position = UDim2.new(0.5, -150, 0.3, 0)
 senhaFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 senhaFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
-senhaFrame.Visible = false
 
 local senhaInput = Instance.new("TextBox", senhaFrame)
 senhaInput.Size = UDim2.new(0.8, 0, 0, 30)
@@ -63,10 +300,6 @@ confirmar.TextColor3 = Color3.fromRGB(255, 0, 0)
 confirmar.Font = Enum.Font.Code
 confirmar.TextSize = 14
 
-btnGood.MouseButton1Click:Connect(function()
-	senhaFrame.Visible = true
-end)
-
 local senhaCorreta = "Vø!d6#X_Çørr0p!d0"
 local function normalizar(t)
 	return t:lower():gsub("ø","o"):gsub("ç","c"):gsub("!",""):gsub("#",""):gsub(" ","")
@@ -74,31 +307,18 @@ end
 
 confirmar.MouseButton1Click:Connect(function()
 	if normalizar(senhaInput.Text) == normalizar(senhaCorreta) then
-		senhaFrame.Visible = false
+		senhaFrame:Destroy()
 
-		-- Tela de acesso
-		local msg = Instance.new("TextLabel", gui)
-		msg.Size = UDim2.new(1, 0, 0, 50)
-		msg.Position = UDim2.new(0, 0, 0.4, 0)
-		msg.Text = "ACCESS GRANTED"
-		msg.TextColor3 = Color3.fromRGB(255, 0, 0)
-		msg.BackgroundTransparency = 1
-		msg.Font = Enum.Font.Code
-		msg.TextSize = 32
-		wait(3)
-		msg:Destroy()
-
-		-- Abrir subpainel
-		local sub = Instance.new("Frame", painel)
-		sub.Size = UDim2.new(0, 380, 0, 200)
-		sub.Position = UDim2.new(0, 10, 0, 90)
+		local sub = Instance.new("Frame", abaGood)
+		sub.Size = UDim2.new(1, -20, 1, -20)
+		sub.Position = UDim2.new(0, 10, 0, 10)
 		sub.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		sub.BorderColor3 = Color3.fromRGB(255, 0, 0)
 
 		local function criarBotao(nome, ordem, func)
 			local btn = Instance.new("TextButton", sub)
 			btn.Size = UDim2.new(0, 180, 0, 30)
-			btn.Position = UDim2.new(0, 10 + ((ordem-1)%2)*190, 0, 10 + math.floor((ordem-1)/2)*35)
+			btn.Position = UDim2.new(0, 10 + ((ordem-1)%3)*190, 0, 10 + math.floor((ordem-1)/3)*35)
 			btn.Text = nome
 			btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 			btn.BorderColor3 = Color3.fromRGB(255, 0, 0)
@@ -107,6 +327,12 @@ confirmar.MouseButton1Click:Connect(function()
 			btn.TextSize = 14
 			btn.MouseButton1Click:Connect(func)
 		end
+
+		local Players = game:GetService("Players")
+		local Lighting = game:GetService("Lighting")
+		local player = Players.LocalPlayer
+		local char = player.Character or player.CharacterAdded:Wait()
+		local root = char:WaitForChild("HumanoidRootPart")
 
 		criarBotao("Buffs máximos", 1, function()
 			local hum = char:FindFirstChildOfClass("Humanoid")
@@ -132,30 +358,7 @@ confirmar.MouseButton1Click:Connect(function()
 			weld.Part1 = root
 		end)
 
-		criarBotao("Corromper céu", 3, function()
-			for _, v in pairs(Lighting:GetChildren()) do
-				if v:IsA("Sky") then v:Destroy() end
-			end
-			local sky = Instance.new("Sky", Lighting)
-			sky.SkyboxBk = "rbxassetid://0"
-			sky.SkyboxDn = "rbxassetid://0"
-			sky.SkyboxFt = "rbxassetid://0"
-			sky.SkyboxLf = "rbxassetid://0"
-			sky.SkyboxRt = "rbxassetid://0"
-			sky.SkyboxUp = "rbxassetid://0"
-			Lighting.Ambient = Color3.fromRGB(255, 0, 0)
-			Lighting.OutdoorAmbient = Color3.fromRGB(50, 0, 0)
-		end)
-
-		criarBotao("Mensagem no chat", 4, function()
-			wait(0.5)
-			game.StarterGui:SetCore("ChatMakeSystemMessage", {
-				Text = "[VOIDREAPER_666X] O sistema foi corrompido.";
-				Color = Color3.fromRGB(255, 0, 0);
-			})
-		end)
-
-criarBotao("Travar todos (menos você)", 5, function()
+		criarBotao("Travar todos (menos você)", 3, function()
 			for _, plr in ipairs(Players:GetPlayers()) do
 				if plr ~= player then
 					local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
@@ -168,13 +371,13 @@ criarBotao("Travar todos (menos você)", 5, function()
 			end
 		end)
 
-criarBotao("Apagar luzes", 6, function()
+		criarBotao("Apagar luzes", 4, function()
 			Lighting.Brightness = 0
 			Lighting.ClockTime = 0
 			Lighting.FogEnd = 10
 		end)
 
-		criarBotao("Inverter tela", 7, function()
+		criarBotao("Inverter tela", 5, function()
 			local invert = Instance.new("ColorCorrectionEffect", Lighting)
 			invert.Name = "VoidInvert"
 			invert.TintColor = Color3.fromRGB(255, 0, 0)
@@ -182,12 +385,19 @@ criarBotao("Apagar luzes", 6, function()
 			invert.Saturation = -1
 		end)
 
-		criarBotao("Simular destruição", 8, function()
+		criarBotao("Simular destruição", 6, function()
 			for _, part in ipairs(workspace:GetDescendants()) do
 				if part:IsA("BasePart") and part.Anchored and part.Name ~= "HumanoidRootPart" then
 					part.Transparency = 1
 				end
 			end
+		end)
+
+		criarBotao("Mensagem global", 7, function()
+			game.StarterGui:SetCore("ChatMakeSystemMessage", {
+				Text = "[VOIDREAPER_666X] O sistema foi dominado.";
+				Color = Color3.fromRGB(255, 0, 0);
+			})
 		end)
 	end
 end)
