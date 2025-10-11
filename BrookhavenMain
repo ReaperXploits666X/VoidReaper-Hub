@@ -26,7 +26,7 @@ painel.Draggable = true
 -- Cabeçalho
 local header = Instance.new("TextLabel", painel)
 header.Size = UDim2.new(1, 0, 0, 30)
-header.Text = "VOIDREAPER_666X HUB 4.0"
+header.Text = "VOIDREAPER_666X HUB 4.1"
 header.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 header.BorderColor3 = Color3.fromRGB(255, 0, 0)
 header.TextColor3 = Color3.fromRGB(255, 0, 0)
@@ -53,7 +53,7 @@ toggle.MouseButton1Click:Connect(function()
 	toggle.Text = painel.Visible and "Fechar Hub" or "Abrir Hub"
 end)
 
--- Abas
+-- Abas nomeadas corretamente
 local abas = {}
 local nomesAbas = {"Geral", "Jogadores", "Modo Good"}
 for i, nome in ipairs(nomesAbas) do
@@ -68,6 +68,7 @@ for i, nome in ipairs(nomesAbas) do
 	abaBtn.TextSize = 14
 
 	local abaFrame = Instance.new("Frame", painel)
+	abaFrame.Name = nome -- Nomeação correta da aba
 	abaFrame.Size = UDim2.new(0, 580, 0, 320)
 	abaFrame.Position = UDim2.new(0, 10, 0, 80)
 	abaFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -105,7 +106,7 @@ local root = char:WaitForChild("HumanoidRootPart")
 
 -- Mensagem na tela
 criarBotaoGeral("Mensagem na tela", 1, function()
-	local msg = Instance.new("TextLabel", gui)
+	local msg = Instance.new("TextLabel", game.CoreGui)
 	msg.Size = UDim2.new(1, 0, 0, 50)
 	msg.Position = UDim2.new(0, 0, 0.4, 0)
 	msg.Text = "VOIDREAPER_666X ESTÁ ATIVO"
