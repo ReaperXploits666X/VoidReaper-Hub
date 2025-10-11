@@ -1,4 +1,4 @@
--- VoidReaper-Hub Versão X
+-- VoidReaper-Hub Versão X — Parte 1
 local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "VoidReaperHub"
 
@@ -91,7 +91,98 @@ for i, plr in pairs(game.Players:GetPlayers()) do
 end
 playerList.CanvasSize = UDim2.new(0, 0, 0, #game.Players:GetPlayers() * 30)
 
--- Botão "Modo Good"
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "VoidReaperHub"
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 450, 0, 500)
+frame.Position = UDim2.new(0.5, -225, 0.5, -250)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BorderSizePixel = 2
+frame.Active = true
+frame.Draggable = true
+frame.Visible = true
+
+local title = Instance.new("TextLabel", frame)
+title.Text = "VoidReaper Hub"
+title.Size = UDim2.new(0, 200, 0, 25)
+title.Position = UDim2.new(0, 10, 0, 10)
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(255, 0, 0)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+local closeBtn = Instance.new("TextButton", frame)
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 5)
+closeBtn.Text = "X"
+closeBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+closeBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 16
+closeBtn.MouseButton1Click:Connect(function()
+    frame.Visible = false
+end)
+
+local reopenBtn = Instance.new("TextButton", gui)
+reopenBtn.Size = UDim2.new(0, 120, 0, 30)
+reopenBtn.Position = UDim2.new(0, 10, 0, 10)
+reopenBtn.Text = "Abrir VoidReaper"
+reopenBtn.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+reopenBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+reopenBtn.Font = Enum.Font.Gotham
+reopenBtn.TextSize = 14
+reopenBtn.MouseButton1Click:Connect(function()
+    frame.Visible = true
+end)
+
+local listFrame = Instance.new("Frame", frame)
+listFrame.Size = UDim2.new(0, 200, 0, 30)
+listFrame.Position = UDim2.new(0, 10, 0, 45)
+listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+listFrame.BorderSizePixel = 1
+
+local toggleList = Instance.new("TextButton", listFrame)
+toggleList.Size = UDim2.new(1, 0, 1, 0)
+toggleList.Text = "Mostrar Jogadores"
+toggleList.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+toggleList.TextColor3 = Color3.fromRGB(255, 0, 0)
+toggleList.Font = Enum.Font.Gotham
+toggleList.TextSize = 14
+
+local playerList = Instance.new("ScrollingFrame", frame)
+playerList.Size = UDim2.new(0, 200, 0, 140)
+playerList.Position = UDim2.new(0, 10, 0, 75)
+playerList.CanvasSize = UDim2.new(0, 0, 0, 0)
+playerList.ScrollBarThickness = 6
+playerList.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+playerList.BorderSizePixel = 1
+playerList.Visible = false
+
+toggleList.MouseButton1Click:Connect(function()
+    playerList.Visible = not playerList.Visible
+end)
+
+local selectedPlayer = nil
+
+for i, plr in pairs(game.Players:GetPlayers()) do
+    local btn = Instance.new("TextButton", playerList)
+    btn.Size = UDim2.new(1, -10, 0, 25)
+    btn.Position = UDim2.new(0, 5, 0, (i - 1) * 30)
+    btn.Text = plr.Name
+    btn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+    btn.TextColor3 = Color3.fromRGB(255, 0, 0)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 12
+    btn.BorderSizePixel = 0
+
+    btn.MouseButton1Click:Connect(function()
+        selectedPlayer = plr
+    end)
+end
+playerList.CanvasSize = UDim2.new(0, 0, 0, #game.Players:GetPlayers() * 30)
+
 local toggleGood = Instance.new("TextButton", frame)
 toggleGood.Size = UDim2.new(0, 200, 0, 25)
 toggleGood.Position = UDim2.new(0, 230, 0, 45)
@@ -101,7 +192,6 @@ toggleGood.TextColor3 = Color3.fromRGB(0, 255, 0)
 toggleGood.Font = Enum.Font.GothamBold
 toggleGood.TextSize = 14
 
--- Lista suspensa
 local goodList = Instance.new("Frame", frame)
 goodList.Size = UDim2.new(0, 200, 0, 150)
 goodList.Position = UDim2.new(0, 230, 0, 75)
@@ -126,7 +216,6 @@ local function createGoodButton(text, posY, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
--- Botões extras
 createGoodButton("Descongelar Jogador", 0, function()
     if selectedPlayer and selectedPlayer.Character then
         local hum = selectedPlayer.Character:FindFirstChildOfClass("Humanoid")
