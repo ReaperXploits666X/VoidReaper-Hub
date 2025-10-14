@@ -6,7 +6,7 @@ gui.Name = "VoidReaperHub"
 
 -- Botão de abrir/fechar
 local toggleButton = Instance.new("TextButton", gui)
-toggleButton.Size = UDim2.new(0, 160, 0, 30)
+toggleButton.Size = UDim2.new(0, 180, 0, 30)
 toggleButton.Position = UDim2.new(0, 10, 0, 10)
 toggleButton.Text = "Abrir VoidReaper Hub"
 toggleButton.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
@@ -16,9 +16,9 @@ toggleButton.TextSize = 14
 
 -- Painel principal
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 400, 0, 500)
+frame.Size = UDim2.new(0, 600, 0, 500)
 frame.Position = UDim2.new(0, 10, 0, 50)
-frame.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+frame.BackgroundColor3 = Color3.fromRGB(20, 0, 0)
 frame.BorderSizePixel = 0
 frame.Visible = false
 frame.Active = true
@@ -27,21 +27,47 @@ frame.Draggable = true
 -- Título
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, 0, 0, 40)
-title.Text = "VoidReaper Hub"
+title.Text = "VOIDREAPER HUB"
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(255, 0, 0)
 title.Font = Enum.Font.Fantasy
 title.TextSize = 24
 
--- Layout dos botões
-local UIList = Instance.new("UIListLayout", frame)
-UIList.Padding = UDim.new(0, 8)
-UIList.SortOrder = Enum.SortOrder.LayoutOrder
+-- Layout principal
+local layout = Instance.new("UIListLayout", frame)
+layout.Padding = UDim.new(0, 8)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Área de botões
+local buttonFrame = Instance.new("Frame", frame)
+buttonFrame.Size = UDim2.new(0.5, -10, 1, -50)
+buttonFrame.BackgroundTransparency = 1
+local buttonLayout = Instance.new("UIListLayout", buttonFrame)
+buttonLayout.Padding = UDim.new(0, 6)
+buttonLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Área de jogadores
+local playerListFrame = Instance.new("Frame", frame)
+playerListFrame.Size = UDim2.new(0.5, -10, 1, -50)
+playerListFrame.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+playerListFrame.BorderSizePixel = 0
+
+local playerTitle = Instance.new("TextLabel", playerListFrame)
+playerTitle.Size = UDim2.new(1, 0, 0, 30)
+playerTitle.Text = "Jogadores Online"
+playerTitle.BackgroundTransparency = 1
+playerTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+playerTitle.Font = Enum.Font.Fantasy
+playerTitle.TextSize = 18
+
+local playerListLayout = Instance.new("UIListLayout", playerListFrame)
+playerListLayout.Padding = UDim.new(0, 4)
+playerListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- Função para criar botões
 local function createButton(name, action)
-	local btn = Instance.new("TextButton", frame)
-	btn.Size = UDim2.new(1, -20, 0, 35)
+	local btn = Instance.new("TextButton", buttonFrame)
+	btn.Size = UDim2.new(1, -10, 0, 30)
 	btn.Text = name
 	btn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
 	btn.TextColor3 = Color3.new(1, 1, 1)
@@ -50,10 +76,10 @@ local function createButton(name, action)
 	btn.MouseButton1Click:Connect(action)
 end
 
--- Botões e ações
+-- Botões
 createButton("decal", function()
 	local decal = Instance.new("Decal")
-	decal.Texture = "rbxassetid://73233578759405"
+	decal.Texture = "rbxassetid://15293627959"
 	decal.Face = Enum.NormalId.Front
 	decal.Parent = workspace:FindFirstChildWhichIsA("Part") or workspace.Terrain
 end)
@@ -66,7 +92,7 @@ createButton("skybox", function()
 	end
 	local sky = Instance.new("Sky")
 	sky.Name = "VoidSky"
-	local id = "rbxassetid://73233578759405"
+	local id = "rbxassetid://15293627959"
 	sky.SkyboxBk = id
 	sky.SkyboxDn = id
 	sky.SkyboxFt = id
@@ -83,11 +109,11 @@ createButton("hint", function()
 	hint:Destroy()
 end)
 
-createButton("jumpscare", function()
+createButton("screamer", function()
 	local img = Instance.new("ImageLabel", gui)
 	img.Size = UDim2.new(1, 0, 1, 0)
 	img.BackgroundTransparency = 1
-	img.Image = "rbxassetid://73233578759405"
+	img.Image = "rbxassetid://15293627959"
 	img.ImageColor3 = Color3.new(1, 0, 0)
 	wait(1.5)
 	img:Destroy()
@@ -101,11 +127,11 @@ createButton("disco", function()
 	Lighting.Ambient = Color3.fromRGB(128, 128, 128)
 end)
 
-createButton("jumpscare remix", function()
+createButton("screamer fixed", function()
 	local img = Instance.new("ImageLabel", gui)
 	img.Size = UDim2.new(1, 0, 1, 0)
 	img.BackgroundTransparency = 1
-	img.Image = "rbxassetid://73233578759405"
+	img.Image = "rbxassetid://15293627959"
 	img.ImageColor3 = Color3.fromRGB(math.random(100,255), 0, math.random(100,255))
 	wait(0.1)
 	img.ImageTransparency = 0.5
@@ -113,7 +139,7 @@ createButton("jumpscare remix", function()
 	img:Destroy()
 end)
 
-createButton("meme", function()
+createButton("theme", function()
 	local sound = Instance.new("Sound", workspace)
 	sound.SoundId = "rbxassetid://4590657391"
 	sound.Volume = 5
@@ -128,6 +154,31 @@ createButton("stop music", function()
 		end
 	end
 end)
+
+-- Atualiza lista de jogadores
+local function updatePlayerList()
+	for _, child in pairs(playerListFrame:GetChildren()) do
+		if child:IsA("TextLabel") and child ~= playerTitle then
+			child:Destroy()
+		end
+	end
+	for _, p in pairs(Players:GetPlayers()) do
+		local label = Instance.new("TextLabel", playerListFrame)
+		label.Size = UDim2.new(1, 0, 0, 20)
+		label.Text = p.Name
+		label.BackgroundTransparency = 1
+		label.TextColor3 = Color3.fromRGB(255, 255, 255)
+		label.Font = Enum.Font.Fantasy
+		label.TextSize = 14
+	end
+end
+
+-- Eventos de entrada/saída
+Players.PlayerAdded:Connect(updatePlayerList)
+Players.PlayerRemoving:Connect(updatePlayerList)
+
+-- Inicializa lista
+updatePlayerList()
 
 -- Abrir/fechar painel
 toggleButton.MouseButton1Click:Connect(function()
