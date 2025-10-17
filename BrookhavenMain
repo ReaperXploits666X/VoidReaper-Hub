@@ -1,7 +1,7 @@
 -- Proteção por nome
 local allowed = {
     ["Minemods"] = true,
-    ["SeuNomeAqui"] = true
+    ["VoidReaper_Havoc666X"] = true
 }
 
 local lp = game.Players.LocalPlayer
@@ -69,7 +69,7 @@ local Visual = Window:MakeTab({
 })
 
 Visual:AddButton({
-    Name = "Ativar ESP (Highlight)",
+    Name = "Ativar ESP (Vermelho)",
     Callback = function()
         for _, plr in pairs(game.Players:GetPlayers()) do
             if plr ~= lp and plr.Character then
