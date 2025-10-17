@@ -17,13 +17,19 @@ local Window = redzlib:MakeWindow({
     SaveFolder = "VoidReaperHub"
 })
 
--- Aba: Informações
+-- ✅ Aba: Informações
 local Info = Window:MakeTab({ Name = "Informações", Icon = "" })
 Info:AddParagraph("Script By", "Reaper Xploits")
+Info:AddParagraph("Versão", "VoidReaper Hub V1.0 Beta")
 Info:AddParagraph("Usuário", lp.Name)
+Info:AddParagraph("Nome de Exibição", lp.DisplayName)
+Info:AddParagraph("Idade da Conta", tostring(lp.AccountAge) .. " dias")
+Info:AddParagraph("Idioma", tostring(game.LocaleId))
 Info:AddParagraph("Executor", identifyexecutor and identifyexecutor() or "Desconhecido")
+Info:AddParagraph("Ping", tostring(math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())) .. " ms")
+Info:AddParagraph("Jogo", game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
 
--- Aba: Admin
+-- ✅ Aba: Admin
 local Admin = Window:MakeTab({ Name = "Admin", Icon = "" })
 Admin:AddButton({ Name = "Voo", Callback = function()
     local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
@@ -39,13 +45,13 @@ Admin:AddButton({ Name = "Invisível", Callback = function()
     end
 end })
 
--- Aba: Avatar
+-- ✅ Aba: Avatar
 local Avatar = Window:MakeTab({ Name = "Avatar", Icon = "" })
-Avatar:AddButton({ Name = "Resetar", Callback = function()
+Avatar:AddButton({ Name = "Resetar Personagem", Callback = function()
     lp:LoadCharacter()
 end })
 
--- Aba: Sound All
+-- ✅ Aba: Sound All
 local Som = Window:MakeTab({ Name = "Sound All", Icon = "" })
 Som:AddTextbox({ Name = "Tocar Som (ID)", Default = "", TextDisappear = true, Callback = function(id)
     local s = Instance.new("Sound", workspace)
@@ -54,7 +60,7 @@ Som:AddTextbox({ Name = "Tocar Som (ID)", Default = "", TextDisappear = true, Ca
     s:Play()
 end })
 
--- Aba: Lag Server
+-- ✅ Aba: Lag Server
 local Lag = Window:MakeTab({ Name = "Lag Server", Icon = "" })
 Lag:AddButton({ Name = "Spam Partes", Callback = function()
     for i = 1, 100 do
@@ -64,7 +70,7 @@ Lag:AddButton({ Name = "Spam Partes", Callback = function()
     end
 end })
 
--- Proteção contra Kick
+-- ✅ Proteção contra Kick
 local mt = getrawmetatable(game)
 setreadonly(mt, false)
 local old = mt.__namecall
