@@ -10,10 +10,9 @@ if not allowed[lp.Name] then
     return
 end
 
--- Biblioteca RedzhubUI
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
+-- Interface RedzhubUI
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/main/Redzhubui"))()
 
--- Janela principal
 local Window = redzlib:MakeWindow({
     Title = "VoidReaper Hub",
     SubTitle = "Versão 1.0 Beta",
@@ -71,7 +70,6 @@ local Farm = Window:MakeTab({ Name = "Auto Farm", Icon = "", PremiumOnly = false
 
 Farm:AddButton({ Name = "Farmar Dinheiro", Callback = function()
     print("AutoFarm ativado (exemplo)")
-    -- Adicione aqui o código real de farm se o jogo permitir
 end })
 
 -- Aba: Avatar
