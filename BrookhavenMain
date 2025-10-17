@@ -9,68 +9,90 @@ if not allowed[lp.Name] then
     return
 end
 
--- Interface RedzhubUI
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/main/Redzhubui"))()
-local Window = redzlib:MakeWindow({
-    Title = "VoidReaper Hub",
-    SubTitle = "Versão 1.0 Beta",
-    SaveFolder = "VoidReaperHub"
+-- Interface Rayfield UI
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Rayfield/main/source.lua"))()
+local Window = Rayfield:CreateWindow({
+    Name = "VoidReaper Hub",
+    LoadingTitle = "VoidReaper Hub V1.0 Beta",
+    LoadingSubtitle = "by Reaper Xploits",
+    ConfigurationSaving = {
+        Enabled = false
+    },
+    Discord = {
+        Enabled = false
+    },
+    KeySystem = false
 })
 
--- ✅ Aba: Informações
-local Info = Window:MakeTab({ Name = "Informações", Icon = "" })
-Info:AddParagraph("Script By", "Reaper Xploits")
-Info:AddParagraph("Versão", "VoidReaper Hub V1.0 Beta")
-Info:AddParagraph("Usuário", lp.Name)
-Info:AddParagraph("Nome de Exibição", lp.DisplayName)
-Info:AddParagraph("Idade da Conta", tostring(lp.AccountAge) .. " dias")
-Info:AddParagraph("Idioma", tostring(game.LocaleId))
-Info:AddParagraph("Executor", identifyexecutor and identifyexecutor() or "Desconhecido")
-Info:AddParagraph("Ping", tostring(math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())) .. " ms")
-Info:AddParagraph("Jogo", game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
+-- Aba: Informações
+local Info = Window:CreateTab("Informações", 4483362458)
+Info:CreateParagraph({Title = "Script By", Content = "Reaper Xploits"})
+Info:CreateParagraph({Title = "Versão", Content = "VoidReaper Hub V1.0 Beta"})
+Info:CreateParagraph({Title = "Usuário", Content = lp.Name})
+Info:CreateParagraph({Title = "Executor", Content = identifyexecutor and identifyexecutor() or "Desconhecido"})
 
--- ✅ Aba: Admin
-local Admin = Window:MakeTab({ Name = "Admin", Icon = "" })
-Admin:AddButton({ Name = "Voo", Callback = function()
-    local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
-    if hrp then hrp.Velocity = Vector3.new(0, 100, 0) end
-end })
-Admin:AddButton({ Name = "Velocidade 100", Callback = function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum then hum.WalkSpeed = 100 end
-end })
-Admin:AddButton({ Name = "Invisível", Callback = function()
-    for _, part in pairs(lp.Character:GetDescendants()) do
-        if part:IsA("BasePart") then part.Transparency = 1 end
+-- Aba: Admin
+local Admin = Window:CreateTab("Admin", 4483362458)
+Admin:CreateButton({
+    Name = "Ativar Voo",
+    Callback = function()
+        local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then hrp.Velocity = Vector3.new(0, 100, 0) end
     end
-end })
-
--- ✅ Aba: Avatar
-local Avatar = Window:MakeTab({ Name = "Avatar", Icon = "" })
-Avatar:AddButton({ Name = "Resetar Personagem", Callback = function()
-    lp:LoadCharacter()
-end })
-
--- ✅ Aba: Sound All
-local Som = Window:MakeTab({ Name = "Sound All", Icon = "" })
-Som:AddTextbox({ Name = "Tocar Som (ID)", Default = "", TextDisappear = true, Callback = function(id)
-    local s = Instance.new("Sound", workspace)
-    s.SoundId = "rbxassetid://" .. id
-    s.Volume = 5
-    s:Play()
-end })
-
--- ✅ Aba: Lag Server
-local Lag = Window:MakeTab({ Name = "Lag Server", Icon = "" })
-Lag:AddButton({ Name = "Spam Partes", Callback = function()
-    for i = 1, 100 do
-        local p = Instance.new("Part", workspace)
-        p.Size = Vector3.new(1,1,1)
-        p.Position = lp.Character.HumanoidRootPart.Position + Vector3.new(math.random(-10,10), 5, math.random(-10,10))
+})
+Admin:CreateButton({
+    Name = "Velocidade 100",
+    Callback = function()
+        local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
+        if hum then hum.WalkSpeed = 100 end
     end
-end })
+})
+Admin:CreateButton({
+    Name = "Invisível",
+    Callback = function()
+        for _, part in pairs(lp.Character:GetDescendants()) do
+            if part:IsA("BasePart") then part.Transparency = 1 end
+        end
+    end
+})
 
--- ✅ Proteção contra Kick
+-- Aba: Avatar
+local Avatar = Window:CreateTab("Avatar", 4483362458)
+Avatar:CreateButton({
+    Name = "Resetar Personagem",
+    Callback = function()
+        lp:LoadCharacter()
+    end
+})
+
+-- Aba: Sound All
+local Som = Window:CreateTab("Sound All", 4483362458)
+Som:CreateInput({
+    Name = "Tocar Som (ID)",
+    PlaceholderText = "Digite o ID do som",
+    RemoveTextAfterFocusLost = true,
+    Callback = function(id)
+        local s = Instance.new("Sound", workspace)
+        s.SoundId = "rbxassetid://" .. id
+        s.Volume = 5
+        s:Play()
+    end
+})
+
+-- Aba: Lag Server
+local Lag = Window:CreateTab("Lag Server", 4483362458)
+Lag:CreateButton({
+    Name = "Spam Partes",
+    Callback = function()
+        for i = 1, 100 do
+            local p = Instance.new("Part", workspace)
+            p.Size = Vector3.new(1,1,1)
+            p.Position = lp.Character.HumanoidRootPart.Position + Vector3.new(math.random(-10,10), 5, math.random(-10,10))
+        end
+    end
+})
+
+-- Proteção contra Kick
 local mt = getrawmetatable(game)
 setreadonly(mt, false)
 local old = mt.__namecall
