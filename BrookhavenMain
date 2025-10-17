@@ -3,7 +3,6 @@ local allowed = {
     ["rafisamumu"] = true,
     ["VoidReaper_Havoc666X"] = true
 }
-
 local lp = game.Players.LocalPlayer
 if not allowed[lp.Name] then
     lp:Kick("Acesso negado ao VoidReaper Hub.")
@@ -12,7 +11,6 @@ end
 
 -- Interface RedzhubUI
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/main/Redzhubui"))()
-
 local Window = redzlib:MakeWindow({
     Title = "VoidReaper Hub",
     SubTitle = "Versão 1.0 Beta",
@@ -20,85 +18,45 @@ local Window = redzlib:MakeWindow({
 })
 
 -- Aba: Informações
-local Info = Window:MakeTab({ Name = "Informações", Icon = "", PremiumOnly = false })
-
+local Info = Window:MakeTab({ Name = "Informações", Icon = "" })
 Info:AddParagraph("Script By", "Reaper Xploits")
 Info:AddParagraph("Usuário", lp.Name)
-Info:AddParagraph("Nome de Exibição", lp.DisplayName)
-Info:AddParagraph("Idade da Conta", tostring(lp.AccountAge) .. " dias")
-Info:AddParagraph("Idioma", tostring(game.LocaleId))
 Info:AddParagraph("Executor", identifyexecutor and identifyexecutor() or "Desconhecido")
-Info:AddParagraph("Ping", tostring(math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())) .. " ms")
-Info:AddParagraph("Jogo", game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
-Info:AddParagraph("Versão do Hub", "VoidReaper V1.0 Beta")
 
 -- Aba: Admin
-local Admin = Window:MakeTab({ Name = "Admin", Icon = "", PremiumOnly = false })
-
-Admin:AddButton({ Name = "Ativar Voo", Callback = function()
+local Admin = Window:MakeTab({ Name = "Admin", Icon = "" })
+Admin:AddButton({ Name = "Voo", Callback = function()
     local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
     if hrp then hrp.Velocity = Vector3.new(0, 100, 0) end
 end })
-
 Admin:AddButton({ Name = "Velocidade 100", Callback = function()
     local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
     if hum then hum.WalkSpeed = 100 end
 end })
-
-Admin:AddButton({ Name = "Invisibilidade", Callback = function()
+Admin:AddButton({ Name = "Invisível", Callback = function()
     for _, part in pairs(lp.Character:GetDescendants()) do
         if part:IsA("BasePart") then part.Transparency = 1 end
     end
-end })
-
-Admin:AddButton({ Name = "Resetar Personagem", Callback = function()
-    lp:LoadCharacter()
-end })
-
-Admin:AddButton({ Name = "Fake ;kill no chat", Callback = function()
-    local head = lp.Character and lp.Character:FindFirstChild("Head")
-    if head then game:GetService("Chat"):Chat(head, ";kill all", Enum.ChatColor.Red) end
-end })
-
-Admin:AddButton({ Name = "Fake ;kick no chat", Callback = function()
-    local head = lp.Character and lp.Character:FindFirstChild("Head")
-    if head then game:GetService("Chat"):Chat(head, ";kick all", Enum.ChatColor.Red) end
-end })
-
--- Aba: Auto Farm
-local Farm = Window:MakeTab({ Name = "Auto Farm", Icon = "", PremiumOnly = false })
-
-Farm:AddButton({ Name = "Farmar Dinheiro", Callback = function()
-    print("AutoFarm ativado (exemplo)")
 end })
 
 -- Aba: Avatar
-local Avatar = Window:MakeTab({ Name = "Avatar", Icon = "", PremiumOnly = false })
-
-Avatar:AddButton({ Name = "Invisibilidade", Callback = function()
-    for _, part in pairs(lp.Character:GetDescendants()) do
-        if part:IsA("BasePart") then part.Transparency = 1 end
-    end
-end })
-
-Avatar:AddButton({ Name = "Resetar Personagem", Callback = function()
+local Avatar = Window:MakeTab({ Name = "Avatar", Icon = "" })
+Avatar:AddButton({ Name = "Resetar", Callback = function()
     lp:LoadCharacter()
 end })
 
 -- Aba: Sound All
-local Som = Window:MakeTab({ Name = "Sound All", Icon = "", PremiumOnly = false })
-
+local Som = Window:MakeTab({ Name = "Sound All", Icon = "" })
 Som:AddTextbox({ Name = "Tocar Som (ID)", Default = "", TextDisappear = true, Callback = function(id)
-    local sound = Instance.new("Sound", workspace)
-    sound.SoundId = "rbxassetid://" .. id
-    sound.Volume = 5
-    sound:Play()
+    local s = Instance.new("Sound", workspace)
+    s.SoundId = "rbxassetid://" .. id
+    s.Volume = 5
+    s:Play()
 end })
 
 -- Aba: Lag Server
-local Lag = Window:MakeTab({ Name = "Lag Server", Icon = "", PremiumOnly = false })
-
-Lag:AddButton({ Name = "Criar Partes para Lag", Callback = function()
+local Lag = Window:MakeTab({ Name = "Lag Server", Icon = "" })
+Lag:AddButton({ Name = "Spam Partes", Callback = function()
     for i = 1, 100 do
         local p = Instance.new("Part", workspace)
         p.Size = Vector3.new(1,1,1)
@@ -106,85 +64,14 @@ Lag:AddButton({ Name = "Criar Partes para Lag", Callback = function()
     end
 end })
 
--- Aba: No Vehicles
-local Veiculos = Window:MakeTab({ Name = "No Vehicles", Icon = "", PremiumOnly = false })
-
-Veiculos:AddButton({ Name = "Remover Veículos", Callback = function()
-    for _, v in pairs(workspace:GetChildren()) do
-        if v:IsA("Model") and v:FindFirstChild("Car") then v:Destroy() end
-    end
-end })
-
--- Aba: Child
-local Crianca = Window:MakeTab({ Name = "Child", Icon = "", PremiumOnly = false })
-
-Crianca:AddButton({ Name = "Reduzir Tamanho", Callback = function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum and hum:FindFirstChild("BodyHeightScale") then hum.BodyHeightScale.Value = 0.5 end
-end })
-
--- Proteções avançadas
-
--- Anti Kick externo
+-- Proteção contra Kick
 local mt = getrawmetatable(game)
 setreadonly(mt, false)
 local old = mt.__namecall
-
 mt.__namecall = newcclosure(function(self, ...)
-    local args = {...}
-    local method = getnamecallmethod()
-    if method == "Kick" and self == lp then
-        warn("Tentativa de Kick bloqueada.")
+    if getnamecallmethod() == "Kick" and self == lp then
+        warn("Kick bloqueado.")
         return
     end
-    return old(self, unpack(args))
+    return old(self, ...)
 end)
-
--- Anti-Porta-Void
-for _, part in pairs(workspace:GetDescendants()) do
-    if part:IsA("BasePart") and (part.Name:lower():find("void") or part.Name:lower():find("kill") or part.Name:lower():find("tp")) then
-        part.CanCollide = false
-        part.Transparency = 1
-        part.Anchored = true
-        warn("Parte suspeita neutralizada: " .. part.Name)
-    end
-end
-
--- Anti-Veículo Forçado
-lp.CharacterAdded:Connect(function(char)
-    char:WaitForChild("HumanoidRootPart")
-    for _, v in pairs(char:GetDescendants()) do
-        if v:IsA("SeatWeld") or v:IsA("Weld") then
-            v:Destroy()
-        end
-    end
-    for _, v in pairs(char:GetDescendants()) do
-        if v:IsA("BasePart") then
-            v.Touched:Connect(function(hit)
-                if hit:IsA("Seat") or hit:IsA("VehicleSeat") then
-                    hit:Destroy()
-                    warn("Veículo interceptado.")
-                end
-            end)
-        end
-    end
-end)
-
--- Anti-Freeze / Anti-Lag
-game:GetService("RunService").Heartbeat:Connect(function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum then
-        if hum.PlatformStand then hum.PlatformStand = false end
-        if hum.WalkSpeed < 16 then hum.WalkSpeed = 16 end
-        if hum.JumpPower < 50 then hum.JumpPower = 50 end
-    end
-end)
-
-for _, obj in pairs(workspace:GetDescendants()) do
-    if obj:IsA("Part") and obj.Size.Magnitude < 0.5 and obj.Anchored == false then
-        obj:Destroy()
-    end
-    if obj:IsA("Sound") and obj.Looped and obj.Playing then
-        obj:Stop()
-    end
-end
