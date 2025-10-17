@@ -1,191 +1,140 @@
-local Players = game:GetService("Players")
-local Lighting = game:GetService("Lighting")
-local player = Players.LocalPlayer
-local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-gui.Name = "VoidReaperHub"
+-- Proteção por nome
+local allowed = {
+    ["Minemods"] = true,
+    ["SeuNomeAqui"] = true
+}
 
--- Botão de abrir/fechar
-local toggleButton = Instance.new("TextButton", gui)
-toggleButton.Size = UDim2.new(0, 180, 0, 30)
-toggleButton.Position = UDim2.new(0, 10, 0, 10)
-toggleButton.Text = "Abrir VoidReaper Hub"
-toggleButton.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
-toggleButton.TextColor3 = Color3.new(1, 1, 1)
-toggleButton.Font = Enum.Font.Fantasy
-toggleButton.TextSize = 14
-
--- Painel principal
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 600, 0, 500)
-frame.Position = UDim2.new(0, 10, 0, 50)
-frame.BackgroundColor3 = Color3.fromRGB(20, 0, 0)
-frame.BorderSizePixel = 0
-frame.Visible = false
-frame.Active = true
-frame.Draggable = true
-
--- Título
-local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Text = "VOIDREAPER HUB"
-title.BackgroundTransparency = 1
-title.TextColor3 = Color3.fromRGB(255, 0, 0)
-title.Font = Enum.Font.Fantasy
-title.TextSize = 24
-
--- Layout principal
-local layout = Instance.new("UIListLayout", frame)
-layout.Padding = UDim.new(0, 8)
-layout.SortOrder = Enum.SortOrder.LayoutOrder
-
--- Área de botões
-local buttonFrame = Instance.new("Frame", frame)
-buttonFrame.Size = UDim2.new(0.5, -10, 1, -50)
-buttonFrame.BackgroundTransparency = 1
-local buttonLayout = Instance.new("UIListLayout", buttonFrame)
-buttonLayout.Padding = UDim.new(0, 6)
-buttonLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
--- Área de jogadores
-local playerListFrame = Instance.new("Frame", frame)
-playerListFrame.Size = UDim2.new(0.5, -10, 1, -50)
-playerListFrame.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
-playerListFrame.BorderSizePixel = 0
-
-local playerTitle = Instance.new("TextLabel", playerListFrame)
-playerTitle.Size = UDim2.new(1, 0, 0, 30)
-playerTitle.Text = "Jogadores Online"
-playerTitle.BackgroundTransparency = 1
-playerTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-playerTitle.Font = Enum.Font.Fantasy
-playerTitle.TextSize = 18
-
-local playerListLayout = Instance.new("UIListLayout", playerListFrame)
-playerListLayout.Padding = UDim.new(0, 4)
-playerListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
--- Função para criar botões
-local function createButton(name, action)
-	local btn = Instance.new("TextButton", buttonFrame)
-	btn.Size = UDim2.new(1, -10, 0, 30)
-	btn.Text = name
-	btn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
-	btn.TextColor3 = Color3.new(1, 1, 1)
-	btn.Font = Enum.Font.Fantasy
-	btn.TextSize = 16
-	btn.MouseButton1Click:Connect(action)
+local lp = game.Players.LocalPlayer
+if not allowed[lp.Name] then
+    lp:Kick("Acesso negado ao VoidReaper Hub.")
+    return
 end
 
--- Botões
-createButton("decal", function()
-	local decal = Instance.new("Decal")
-	decal.Texture = "rbxassetid://15293627959"
-	decal.Face = Enum.NormalId.Front
-	decal.Parent = workspace:FindFirstChildWhichIsA("Part") or workspace.Terrain
-end)
+-- Carrega a biblioteca RedzhubUI
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
 
-createButton("skybox", function()
-	for _, obj in pairs(Lighting:GetChildren()) do
-		if obj:IsA("Sky") then
-			obj:Destroy()
-		end
-	end
-	local sky = Instance.new("Sky")
-	sky.Name = "VoidSky"
-	local id = "rbxassetid://15293627959"
-	sky.SkyboxBk = id
-	sky.SkyboxDn = id
-	sky.SkyboxFt = id
-	sky.SkyboxLf = id
-	sky.SkyboxRt = id
-	sky.SkyboxUp = id
-	sky.Parent = Lighting
-end)
+-- Cria a janela principal
+local Window = redzlib:MakeWindow({
+    Title = "VoidReaper Hub",
+    SubTitle = "Versão 1.0 beta",
+    SaveFolder = "VoidReaperHub"
+})
 
-createButton("hint", function()
-	local hint = Instance.new("Hint", workspace)
-	hint.Text = "O Void está chegando..."
-	wait(3)
-	hint:Destroy()
-end)
+-- Aba: Comandos
+local Comandos = Window:MakeTab({
+    Name = "Comandos",
+    Icon = "",
+    PremiumOnly = false
+})
 
-createButton("screamer", function()
-	local img = Instance.new("ImageLabel", gui)
-	img.Size = UDim2.new(1, 0, 1, 0)
-	img.BackgroundTransparency = 1
-	img.Image = "rbxassetid://15293627959"
-	img.ImageColor3 = Color3.new(1, 0, 0)
-	wait(1.5)
-	img:Destroy()
-end)
+Comandos:AddButton({
+    Name = "Ativar Voo",
+    Callback = function()
+        local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then hrp.Velocity = Vector3.new(0, 100, 0) end
+    end
+})
 
-createButton("disco", function()
-	for i = 1, 10 do
-		Lighting.Ambient = Color3.fromRGB(math.random(0,255), math.random(0,255), math.random(0,255))
-		wait(0.2)
-	end
-	Lighting.Ambient = Color3.fromRGB(128, 128, 128)
-end)
+Comandos:AddButton({
+    Name = "Velocidade 100",
+    Callback = function()
+        local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
+        if hum then hum.WalkSpeed = 100 end
+    end
+})
 
-createButton("screamer fixed", function()
-	local img = Instance.new("ImageLabel", gui)
-	img.Size = UDim2.new(1, 0, 1, 0)
-	img.BackgroundTransparency = 1
-	img.Image = "rbxassetid://15293627959"
-	img.ImageColor3 = Color3.fromRGB(math.random(100,255), 0, math.random(100,255))
-	wait(0.1)
-	img.ImageTransparency = 0.5
-	wait(0.3)
-	img:Destroy()
-end)
+Comandos:AddButton({
+    Name = "Invisibilidade",
+    Callback = function()
+        for _, part in pairs(lp.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.Transparency = 1
+            end
+        end
+    end
+})
 
-createButton("theme", function()
-	local sound = Instance.new("Sound", workspace)
-	sound.SoundId = "rbxassetid://4590657391"
-	sound.Volume = 5
-	sound:Play()
-	game.Debris:AddItem(sound, 3)
-end)
+Comandos:AddButton({
+    Name = "Resetar Personagem",
+    Callback = function()
+        lp:LoadCharacter()
+    end
+})
 
-createButton("stop music", function()
-	for _, s in pairs(workspace:GetDescendants()) do
-		if s:IsA("Sound") then
-			s:Stop()
-		end
-	end
-end)
+-- Aba: Visual
+local Visual = Window:MakeTab({
+    Name = "Visual",
+    Icon = "",
+    PremiumOnly = false
+})
 
--- Atualiza lista de jogadores
-local function updatePlayerList()
-	for _, child in pairs(playerListFrame:GetChildren()) do
-		if child:IsA("TextLabel") and child ~= playerTitle then
-			child:Destroy()
-		end
-	end
-	for _, p in pairs(Players:GetPlayers()) do
-		local label = Instance.new("TextLabel", playerListFrame)
-		label.Size = UDim2.new(1, 0, 0, 20)
-		label.Text = p.Name
-		label.BackgroundTransparency = 1
-		label.TextColor3 = Color3.fromRGB(255, 255, 255)
-		label.Font = Enum.Font.Fantasy
-		label.TextSize = 14
-	end
-end
+Visual:AddButton({
+    Name = "Ativar ESP (Highlight)",
+    Callback = function()
+        for _, plr in pairs(game.Players:GetPlayers()) do
+            if plr ~= lp and plr.Character then
+                local hl = Instance.new("Highlight")
+                hl.Name = "VoidESP"
+                hl.FillColor = Color3.fromRGB(255, 0, 0)
+                hl.OutlineColor = Color3.fromRGB(0, 0, 0)
+                hl.FillTransparency = 0.5
+                hl.OutlineTransparency = 0
+                hl.Adornee = plr.Character
+                hl.Parent = plr.Character
+            end
+        end
+    end
+})
 
--- Eventos de entrada/saída
-Players.PlayerAdded:Connect(updatePlayerList)
-Players.PlayerRemoving:Connect(updatePlayerList)
+Visual:AddButton({
+    Name = "Remover ESP",
+    Callback = function()
+        for _, plr in pairs(game.Players:GetPlayers()) do
+            if plr.Character and plr.Character:FindFirstChild("VoidESP") then
+                plr.Character.VoidESP:Destroy()
+            end
+        end
+    end
+})
 
--- Inicializa lista
-updatePlayerList()
+-- Aba: Utilitários
+local Util = Window:MakeTab({
+    Name = "Utilitários",
+    Icon = "",
+    PremiumOnly = false
+})
 
--- Abrir/fechar painel
-toggleButton.MouseButton1Click:Connect(function()
-	frame.Visible = not frame.Visible
-	if frame.Visible then
-		toggleButton.Text = "Fechar VoidReaper Hub"
-	else
-		toggleButton.Text = "Abrir VoidReaper Hub"
-	end
-end)
+Util:AddTextbox({
+    Name = "Teleportar até jogador",
+    Default = "",
+    TextDisappear = true,
+    Callback = function(nome)
+        local target = game.Players:FindFirstChild(nome)
+        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                hrp.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
+            end
+        end
+    end
+})
+
+Util:AddButton({
+    Name = "Fake ;kill no chat",
+    Callback = function()
+        local head = lp.Character and lp.Character:FindFirstChild("Head")
+        if head then
+            game:GetService("Chat"):Chat(head, ";kill all", Enum.ChatColor.Red)
+        end
+    end
+})
+
+Util:AddButton({
+    Name = "Fake ;kick no chat",
+    Callback = function()
+        local head = lp.Character and lp.Character:FindFirstChild("Head")
+        if head then
+            game:GetService("Chat"):Chat(head, ";kick all", Enum.ChatColor.Red)
+        end
+    end
+})
