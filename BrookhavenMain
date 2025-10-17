@@ -10,40 +10,65 @@ if not allowed[lp.Name] then
     return
 end
 
--- Carrega a biblioteca RedzhubUI
+-- Biblioteca RedzhubUI
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
 
--- Cria a janela principal
+-- Janela principal
 local Window = redzlib:MakeWindow({
     Title = "VoidReaper Hub",
     SubTitle = "Versão 1.0 beta",
     SaveFolder = "VoidReaperHub"
 })
 
--- Aba: Comandos
-local Comandos = Window:MakeTab({
-    Name = "Comandos",
-    Icon = "",
-    PremiumOnly = false
-})
+-- Aba: Informações
+local Info = Window:MakeTab({ Name = "Informações", Icon = "", PremiumOnly = false })
 
-Comandos:AddButton({
-    Name = "Ativar Voo",
+Info:AddParagraph("Seu Nome de Usuário", lp.Name)
+Info:AddParagraph("Seu Nome de Exibição", lp.DisplayName)
+Info:AddParagraph("Idade da Conta", tostring(lp.AccountAge) .. " dias")
+Info:AddParagraph("Idioma", tostring(game.LocaleId))
+Info:AddParagraph("Executor", identifyexecutor and identifyexecutor() or "Desconhecido")
+Info:AddParagraph("Ping", tostring(math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())) .. " ms")
+Info:AddParagraph("Jogando em", game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
+
+-- Aba: Auto Farm
+local Farm = Window:MakeTab({ Name = "Auto Farm", Icon = "", PremiumOnly = false })
+
+Farm:AddButton({
+    Name = "Farmar Dinheiro",
     Callback = function()
-        local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
-        if hrp then hrp.Velocity = Vector3.new(0, 100, 0) end
+        print("AutoFarm ativado (exemplo)")
+        -- Adicione aqui o código real de farm se o jogo permitir
     end
 })
 
-Comandos:AddButton({
-    Name = "Velocidade 100",
+-- Aba: Troll
+local Troll = Window:MakeTab({ Name = "Troll", Icon = "", PremiumOnly = false })
+
+Troll:AddButton({
+    Name = "Fake ;kill",
     Callback = function()
-        local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-        if hum then hum.WalkSpeed = 100 end
+        local head = lp.Character and lp.Character:FindFirstChild("Head")
+        if head then
+            game:GetService("Chat"):Chat(head, ";kill all", Enum.ChatColor.Red)
+        end
     end
 })
 
-Comandos:AddButton({
+Troll:AddButton({
+    Name = "Fake ;kick",
+    Callback = function()
+        local head = lp.Character and lp.Character:FindFirstChild("Head")
+        if head then
+            game:GetService("Chat"):Chat(head, ";kick all", Enum.ChatColor.Red)
+        end
+    end
+})
+
+-- Aba: Avatar
+local Avatar = Window:MakeTab({ Name = "Avatar", Icon = "", PremiumOnly = false })
+
+Avatar:AddButton({
     Name = "Invisibilidade",
     Callback = function()
         for _, part in pairs(lp.Character:GetDescendants()) do
@@ -54,87 +79,63 @@ Comandos:AddButton({
     end
 })
 
-Comandos:AddButton({
+Avatar:AddButton({
     Name = "Resetar Personagem",
     Callback = function()
         lp:LoadCharacter()
     end
 })
 
--- Aba: Visual
-local Visual = Window:MakeTab({
-    Name = "Visual",
-    Icon = "",
-    PremiumOnly = false
-})
+-- Aba: Som
+local Som = Window:MakeTab({ Name = "Som", Icon = "", PremiumOnly = false })
 
-Visual:AddButton({
-    Name = "Ativar ESP (Vermelho)",
-    Callback = function()
-        for _, plr in pairs(game.Players:GetPlayers()) do
-            if plr ~= lp and plr.Character then
-                local hl = Instance.new("Highlight")
-                hl.Name = "VoidESP"
-                hl.FillColor = Color3.fromRGB(255, 0, 0)
-                hl.OutlineColor = Color3.fromRGB(0, 0, 0)
-                hl.FillTransparency = 0.5
-                hl.OutlineTransparency = 0
-                hl.Adornee = plr.Character
-                hl.Parent = plr.Character
-            end
-        end
-    end
-})
-
-Visual:AddButton({
-    Name = "Remover ESP",
-    Callback = function()
-        for _, plr in pairs(game.Players:GetPlayers()) do
-            if plr.Character and plr.Character:FindFirstChild("VoidESP") then
-                plr.Character.VoidESP:Destroy()
-            end
-        end
-    end
-})
-
--- Aba: Utilitários
-local Util = Window:MakeTab({
-    Name = "Utilitários",
-    Icon = "",
-    PremiumOnly = false
-})
-
-Util:AddTextbox({
-    Name = "Teleportar até jogador",
+Som:AddTextbox({
+    Name = "Tocar Som (ID)",
     Default = "",
     TextDisappear = true,
-    Callback = function(nome)
-        local target = game.Players:FindFirstChild(nome)
-        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-            local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
-            if hrp then
-                hrp.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
+    Callback = function(id)
+        local sound = Instance.new("Sound", workspace)
+        sound.SoundId = "rbxassetid://" .. id
+        sound.Volume = 5
+        sound:Play()
+    end
+})
+
+-- Aba: Lag
+local Lag = Window:MakeTab({ Name = "Lag Server", Icon = "", PremiumOnly = false })
+
+Lag:AddButton({
+    Name = "Criar Partes para Lag",
+    Callback = function()
+        for i = 1, 100 do
+            local p = Instance.new("Part", workspace)
+            p.Size = Vector3.new(1,1,1)
+            p.Position = lp.Character.HumanoidRootPart.Position + Vector3.new(math.random(-10,10), 5, math.random(-10,10))
+        end
+    end
+})
+
+-- Aba: Veículos
+local Veiculos = Window:MakeTab({ Name = "Sem Veículos", Icon = "", PremiumOnly = false })
+
+Veiculos:AddButton({
+    Name = "Remover Veículos",
+    Callback = function()
+        for _, v in pairs(workspace:GetChildren()) do
+            if v:IsA("Model") and v:FindFirstChild("Car") then
+                v:Destroy()
             end
         end
     end
 })
 
-Util:AddButton({
-    Name = "Fake ;kill no chat",
-    Callback = function()
-        local head = lp.Character and lp.Character:FindFirstChild("Head")
-        if head then
-            game:GetService("Chat"):Chat(head, ";kill all", Enum.ChatColor.Red)
-        end
-    end
-})
+-- Aba: Criança
+local Crianca = Window:MakeTab({ Name = "Modo Criança", Icon = "", PremiumOnly = false })
 
-Util:AddButton({
-    Name = "Fake ;kick no chat",
+Crianca:AddButton({
+    Name = "Reduzir Tamanho",
     Callback = function()
-        local head = lp.Character and lp.Character:FindFirstChild("Head")
-        if head then
-            game:GetService("Chat"):Chat(head, ";kick all", Enum.ChatColor.Red)
-        end
+        local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
+        if hum then hum.BodyHeightScale.Value = 0.5 end
     end
 })
