@@ -1,78 +1,110 @@
--- Proteção por nome
-local allowed = {
-    ["rafisamumu"] = true,
-    ["VoidReaper_Havoc666X"] = true
-}
-local lp = game.Players.LocalPlayer
-if not allowed[lp.Name] then
-    lp:Kick("Acesso negado ao VoidReaper Hub.")
-    return
+--[[ VOIDREAPER_HAVOC666X // CORE ADM V68 ]]
+local Players = game:GetService("Players")
+local LP = Players.LocalPlayer
+local Auth = {["VoidReaper_Havoc666X"]=true, ["tequinhasamu"]=true, ["Luffy_DIABO"]=true}
+
+local function Notify(t) 
+    game:GetService("StarterGui"):SetCore("ChatMakeSystemMessage", {Text = "[ADM]: "..t, Color = Color3.new(1,0,0)}) 
 end
 
--- Interface leve (Kavo UI)
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ConnoisseurCreations/KavoUI/main/source.lua"))()
-local Window = Library.CreateLib("VoidReaper Hub V1.0 Beta", "DarkTheme")
+local function GetP(n)
+    for _, p in pairs(Players:GetPlayers()) do if p.Name:lower():sub(1,#n)==n:lower() or p.DisplayName:lower():sub(1,#n)==n:lower() then return p end end
+end
 
--- Aba: Informações
-local Info = Window:NewTab("Informações")
-local InfoSection = Info:NewSection("Sobre o Script")
-InfoSection:NewLabel("Script By: Reaper Xploits")
-InfoSection:NewLabel("Usuário: " .. lp.Name)
-InfoSection:NewLabel("Executor: " .. (identifyexecutor and identifyexecutor() or "Desconhecido"))
+LP.Chatted:Connect(function(msg)
+    local a = msg:split(" ")
+    local cmd = a[1]:lower()
+    
+    if cmd == ";list" then
+        Notify("--- LISTA SUPREMA ---")
+        Notify(";kick [nick] / ;banall - Extermínio")
+        Notify(";invisible / ;uninv - Invisibilidade")
+        Notify(";zika - Full Chaos Mode")
+        Notify(";hellsky / ;voidsky - Mudar o Céu")
+        Notify(";scare [nick] - Jumpscare")
+        Notify(";unhouse - Abrir Casas")
+    end
 
--- Aba: Admin
-local Admin = Window:NewTab("Admin")
-local AdminSection = Admin:NewSection("Comandos")
-AdminSection:NewButton("Voo", "Ativa voo", function()
-    local hrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
-    if hrp then hrp.Velocity = Vector3.new(0, 100, 0) end
+    if (cmd == ";kick" or cmd == ";ban") and a[2] then
+        local t = GetP(a[2])
+        if t then
+            local bv = Instance.new("BodyVelocity", LP.Character.HumanoidRootPart)
+            bv.Velocity = Vector3.new(0, 1e7, 0)
+            LP.Character.HumanoidRootPart.CFrame = t.Character.HumanoidRootPart.CFrame
+            task.wait(0.1) bv:Destroy()
+            Notify(t.Name .. " ELIMINADO.")
+        end
+    end
+
+    if cmd == ";banall" then
+        for _, p in pairs(Players:GetPlayers()) do
+            if p ~= LP and not Auth[p.Name] then
+                LP.Character.HumanoidRootPart.CFrame = p.Character.HumanoidRootPart.CFrame
+                local bv = Instance.new("BodyVelocity", LP.Character.HumanoidRootPart)
+                bv.Velocity = Vector3.new(0, 1e7, 0) task.wait(0.1) bv:Destroy()
+            end
+        end
+    end
 end)
-AdminSection:NewButton("Velocidade 100", "Aumenta velocidade", function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum then hum.WalkSpeed = 100 end
-end)
-AdminSection:NewButton("Invisível", "Deixa invisível", function()
-    for _, part in pairs(lp.Character:GetDescendants()) do
-        if part:IsA("BasePart") then part.Transparency = 1 end
+Notify("Módulo 1: ADM Carregado.")
+
+--[[ VOIDREAPER_HAVOC666X // ENTITY MODULE ]]
+local LP = game:GetService("Players").LocalPlayer
+local RS = game:GetService("RunService")
+local Noclipping = false
+
+RS.Stepped:Connect(function()
+    if Noclipping and LP.Character then
+        for _, v in pairs(LP.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end
     end
 end)
 
--- Aba: Avatar
-local Avatar = Window:NewTab("Avatar")
-local AvatarSection = Avatar:NewSection("Personagem")
-AvatarSection:NewButton("Resetar", "Reseta personagem", function()
-    lp:LoadCharacter()
-end)
-
--- Aba: Som
-local Som = Window:NewTab("Sound All")
-local SomSection = Som:NewSection("Tocar Som")
-SomSection:NewTextBox("ID do Som", "Digite o ID", function(id)
-    local s = Instance.new("Sound", workspace)
-    s.SoundId = "rbxassetid://" .. id
-    s.Volume = 5
-    s:Play()
-end)
-
--- Aba: Lag
-local Lag = Window:NewTab("Lag Server")
-local LagSection = Lag:NewSection("Spam")
-LagSection:NewButton("Spam Partes", "Cria partes para lag", function()
-    for i = 1, 100 do
-        local p = Instance.new("Part", workspace)
-        p.Size = Vector3.new(1,1,1)
-        p.Position = lp.Character.HumanoidRootPart.Position + Vector3.new(math.random(-10,10), 5, math.random(-10,10))
+LP.Chatted:Connect(function(msg)
+    local cmd = msg:lower()
+    if cmd == ";invisible" then
+        for _, v in pairs(LP.Character:GetDescendants()) do if v:IsA("BasePart") or v:IsA("Decal") then v.Transparency = 1 end end
+    elseif cmd == ";uninv" or cmd == ";uninvisible" then
+        for _, v in pairs(LP.Character:GetDescendants()) do if v:IsA("BasePart") or v:IsA("Decal") then v.Transparency = 0 end end
+    elseif cmd == ";zika" then
+        Noclipping = true
+        LP.Character.Humanoid.WalkSpeed = 200
+    elseif cmd == ";unhouse" then
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v.Name == "BanBlock" or v.Name == "Barrier" or v.Name == "Door" then v:Destroy() end
+        end
     end
 end)
+print("Módulo 2: Invisibilidade e Invasão Pronto.")
 
--- Proteção contra Kick
-local mt = getrawmetatable(game)
-setreadonly(mt, false)
-local old = mt.__namecall
-mt.__namecall = newcclosure(function(self, ...)
-    if getnamecallmethod() == "Kick" and self == lp then
-        warn("Kick bloqueado.")
-        return
+--[[ VOIDREAPER_HAVOC666X // TERROR MODULE ]]
+local Lighting = game:GetService("Lighting")
+local LP = game:GetService("Players").LocalPlayer
+
+local function SetSky(id)
+    for _, v in pairs(Lighting:GetChildren()) do if v:IsA("Sky") then v:Destroy() end end
+    local s = Instance.new("Sky", Lighting)
+    s.SkyboxBk = "rbxassetid://"..id s.SkyboxDn = "rbxassetid://"..id s.SkyboxFt = "rbxassetid://"..id
+    s.SkyboxLf = "rbxassetid://"..id s.SkyboxRt = "rbxassetid://"..id s.SkyboxUp = "rbxassetid://"..id
+end
+
+LP.Chatted:Connect(function(msg)
+    local a = msg:split(" ")
+    if a[1] == ";hellsky" then SetSky("600886096") Lighting.ClockTime = 0
+    elseif a[1] == ";voidsky" then SetSky("159067838") Lighting.ClockTime = 0
+    elseif a[1] == ";scare" and a[2] then
+        local t = nil
+        for _, p in pairs(game.Players:GetPlayers()) do if p.Name:lower():sub(1,#a[2])==a[2]:lower() then t = p end end
+        if t then
+            local s = Instance.new("Sound", t.Character.HumanoidRootPart)
+            s.SoundId = "rbxassetid://4835664244" s.Volume = 10 s:Play()
+            LP.Character.HumanoidRootPart.CFrame = t.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-2)
+        end
+    elseif a[1] == ";verifique" then
+        for _, p in pairs(game.Players:GetPlayers()) do
+            if p:FindFirstChild("PlayerGui") and (p.PlayerGui:FindFirstChild("93") or p.PlayerGui:FindFirstChild("Coquette")) then
+                Instance.new("Highlight", p.Character).FillColor = Color3.new(1,0,0)
+            end
+        end
     end
-    return old(self, ...)
 end)
+print("Módulo 3: Terror e Clima Pronto.")
