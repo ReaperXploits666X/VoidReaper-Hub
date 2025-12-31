@@ -1,397 +1,201 @@
--- ADMIN MASTER SCRIPT by Minemods
+--[[
+    VOIDREAPER_HAVOC666X // V72 THE APOCALYPSE
+    REPOSITÓRIO: ReaperXploits666X/VoidReaper-Hub
+    STATUS: OMNIPOTENTE (GOD-MODE / CAOS / ANTI-HACKER)
+]]
+
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local RunService = game:GetService("RunService")
-local Debris = game:GetService("Debris")
-local UserInputService = game:GetService("UserInputService")
+local LP = Players.LocalPlayer
+local RS = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local StarterGui = game:GetService("StarterGui")
+local Camera = workspace.CurrentCamera
 
-local admins = { [LocalPlayer.Name] = true }
-local frozen = {}
-local suspectList = {}
-local preso = nil
-local algemado = false
-local flying = false
-local noclip = false
+-- 🔐 CONFIGURAÇÃO DE ELITE
+local Owner = "VoidReaper_Havoc666X"
+local Whitelist = {
+    ["VoidReaper_Havoc666X"] = true,
+    ["tequinhasamu"] = true,
+    ["Luffy_DIABO"] = true,
+    ["rafisamumu"] = true
+}
 
--- Funções utilitárias
-local function isAdmin(name)
-	return admins[name] == true
+-- 🛠️ ESTADOS
+local Noclipping = false
+local GhostActive = false
+local EarthQuake = false
+local AutoBanHacks = false
+
+-- 📋 RASTREIO DE USUÁRIOS DO SEU SCRIPT (BACKDOOR)
+_G.ReaperUsers = _G.ReaperUsers or {}
+if not table.find(_G.ReaperUsers, LP.Name) then table.insert(_G.ReaperUsers, LP.Name) end
+
+-- 🌀 SISTEMA DE NOTIFICAÇÃO (CHAT LOCAL)
+local function Notify(text)
+    StarterGui:SetCore("ChatMakeSystemMessage", {
+        Text = "{VOID-REAPER}: " .. text;
+        Color = Color3.fromRGB(255, 0, 0);
+        Font = Enum.Font.SourceSansBold;
+        TextSize = 20;
+    })
 end
 
-local function getRoot(p)
-	return p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+-- 🌀 MOTOR DE BANIMENTO (FÍSICA DE 1 BILHÃO)
+local function Obliterate(target)
+    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+        local hrp = LP.Character.HumanoidRootPart
+        local thrp = target.Character.HumanoidRootPart
+        local oldPos = hrp.CFrame
+        
+        local bv = Instance.new("BodyVelocity", hrp)
+        bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+        bv.Velocity = Vector3.new(0, 1e8, 0)
+        
+        local start = tick()
+        while tick() - start < 0.2 do
+            hrp.CFrame = thrp.CFrame
+            task.wait()
+        end
+        
+        bv:Destroy()
+        hrp.CFrame = oldPos
+    end
 end
 
--- Parte 1: Comandos básicos
-local function prender()
-	local char = LocalPlayer.Character
-	local root = getRoot(LocalPlayer)
-	if not root then return end
-	local menorDist = math.huge
-	local alvo = nil
-	for _, p in pairs(Players:GetPlayers()) do
-		if p ~= LocalPlayer and getRoot(p) then
-			local dist = (getRoot(p).Position - root.Position).Magnitude
-			if dist < 10 and dist < menorDist then
-				menorDist = dist
-				alvo = p
-			end
-		end
-	end
-	if alvo then
-		preso = alvo
-		algemado = true
-		print("Preso: " .. alvo.Name)
-	end
+-- 🌀 SCANNER DE HACKERS RIVAIS
+local function ScanAndBan()
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LP and not Whitelist[p.Name] then
+            local isHacker = false
+            -- Detecção por GUI Rival
+            if p:FindFirstChild("PlayerGui") and (p.PlayerGui:FindFirstChild("93") or p.PlayerGui:FindFirstChild("Coquette") or p.PlayerGui:FindFirstChild("Cartola") or p.PlayerGui:FindFirstChild("Pendulum")) then
+                isHacker = true
+            end
+            -- Detecção por Velocidade (Acima de 30)
+            if p.Character and p.Character:FindFirstChild("Humanoid") and p.Character.Humanoid.WalkSpeed > 30 then
+                isHacker = true
+            end
+            
+            if isHacker then
+                Notify("Hacker Detectado: " .. p.Name .. " - BANINDO...")
+                Obliterate(p)
+            end
+        end
+    end
 end
 
-local function soltar()
-	if preso then print("Solto: " .. preso.Name) end
-	preso = nil
-	algemado = false
-end
-
-RunService.RenderStepped:Connect(function()
-	if preso and algemado and getRoot(preso) and getRoot(LocalPlayer) then
-		getRoot(preso).CFrame = getRoot(LocalPlayer).CFrame * CFrame.new(2, 0, 0)
-	end
+-- 🌀 LOOP DE ATUALIZAÇÃO
+RS.Stepped:Connect(function()
+    if LP.Character and Noclipping then
+        for _, v in pairs(LP.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end
+    end
+    if AutoBanHacks then ScanAndBan() end
+    if EarthQuake then
+        Camera.CoordinateFrame = Camera.CoordinateFrame * CFrame.fromEulerAnglesXYZ(math.random(-5,5)/100, math.random(-5,5)/100, math.random(-5,5)/100)
+    end
 end)
 
-Players.PlayerAdded:Connect(function(p)
-	warn("🛡️ Novo jogador entrou: " .. p.Name)
+-- --- ⌨️ CONSOLE DE COMANDOS SUPREMOS ---
+
+LP.Chatted:Connect(function(msg)
+    if LP.Name ~= Owner then return end -- SÓ VOCÊ MANDA
+    
+    local args = msg:split(" ")
+    local cmd = args[1]:lower()
+    local arg2 = args[2]
+
+    -- [ ;list ] - A LISTA COMPLETA SEM REMOÇÕES
+    if cmd == ";list" then
+        Notify("--- 💀 COMANDOS DE BANIMENTO 💀 ---")
+        Notify(";kick [nick] - Bane por Física Suprema")
+        Notify(";banall - Limpa o servidor (The Purge)")
+        Notify(";banhacks - Bane hackers rivais agora")
+        Notify(";autoban - Ativa/Desativa Ban Automático de hacks")
+        Notify(";banusers - Bane todos que executaram SEU script")
+        Notify("--- 👻 COMANDOS DE ENTIDADE ---")
+        Notify(";invisible / ;uninv - Ficar Invisível")
+        Notify(";zika - Full Mode (Invis/Speed/Noclip/ESP)")
+        Notify(";noclip / ;clip - Atravessar Paredes")
+        Notify(";ghostwalk - Mata quem você encostar")
+        Notify("--- 🌪️ COMANDOS DE CAOS ---")
+        Notify(";voidsky / ;hellsky - Muda o Céu")
+        Notify(";unhouse - Destrói barreiras de casas")
+        Notify(";scare [nick] - Jumpscare (Grito)")
+        Notify(";earthquake - Terremoto na tela")
+        Notify(";bring all / ;bring [nick] - Puxa alvos")
+        Notify(";freezeall - Congela os mortais")
+    end
+
+    -- [ COMANDOS DE BAN ]
+    if (cmd == ";kick" or cmd == ";ban") and arg2 then
+        local t = nil
+        for _, p in pairs(Players:GetPlayers()) do if p.Name:lower():sub(1,#arg2) == arg2:lower() then t = p end end
+        if t then Obliterate(t) Notify(t.Name .. " EXPULSO.") end
+    end
+
+    if cmd == ";banall" then
+        Notify("PURGUE EM ANDAMENTO...")
+        for _, p in pairs(Players:GetPlayers()) do if p ~= LP and not Whitelist[p.Name] then Obliterate(p) task.wait(0.05) end end
+    end
+
+    if cmd == ";banhacks" then ScanAndBan() end
+    
+    if cmd == ";autoban" then
+        AutoBanHacks = not AutoBanHacks
+        Notify("AUTO-BAN HACKERS: " .. (AutoBanHacks and "LIGADO" or "DESLIGADO"))
+    end
+
+    if cmd == ";banusers" then
+        for _, name in pairs(_G.ReaperUsers) do
+            local p = Players:FindFirstChild(name)
+            if p and p ~= LP and not Whitelist[p.Name] then Obliterate(p) end
+        end
+        Notify("USUÁRIOS DO SCRIPT ELIMINADOS.")
+    end
+
+    -- [ ENTIDADE ]
+    if cmd == ";invisible" then
+        for _, v in pairs(LP.Character:GetDescendants()) do if v:IsA("BasePart") or v:IsA("Decal") then v.Transparency = 1 end end
+    elseif cmd == ";uninv" then
+        for _, v in pairs(LP.Character:GetDescendants()) do if v:IsA("BasePart") or v:IsA("Decal") then v.Transparency = 0 end end
+    elseif cmd == ";zika" then
+        Noclipping = true
+        LP.Character.Humanoid.WalkSpeed = 250
+        for _, p in pairs(Players:GetPlayers()) do if p ~= LP and p.Character then Instance.new("Highlight", p.Character).FillColor = Color3.new(1,0,0) end end
+    end
+
+    -- [ CAOS ]
+    if cmd == ";voidsky" then
+        for _, v in pairs(Lighting:GetChildren()) do if v:IsA("Sky") then v:Destroy() end end
+        local s = Instance.new("Sky", Lighting) s.SkyboxBk = "rbxassetid://159067838" s.SkyboxDn = "rbxassetid://159067838"
+        s.SkyboxFt = "rbxassetid://159067838" s.SkyboxLf = "rbxassetid://159067838" s.SkyboxRt = "rbxassetid://159067838" s.SkyboxUp = "rbxassetid://159067838"
+        Lighting.ClockTime = 0
+    end
+
+    if cmd == ";unhouse" then
+        for _, v in pairs(workspace:GetDescendants()) do if v.Name == "BanBlock" or v.Name == "Barrier" or v.Name == "Door" then v:Destroy() end end
+    end
+
+    if cmd == ";scare" and arg2 then
+        local t = nil
+        for _, p in pairs(Players:GetPlayers()) do if p.Name:lower():sub(1,#arg2) == arg2:lower() then t = p end end
+        if t then
+            local s = Instance.new("Sound", t.Character.HumanoidRootPart) s.SoundId = "rbxassetid://4835664244" s.Volume = 10 s:Play()
+            LP.Character.HumanoidRootPart.CFrame = t.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-2)
+        end
+    end
+
+    if cmd == ";earthquake" then EarthQuake = not EarthQuake end
+    
+    if cmd == ";noclip" then Noclipping = true elseif cmd == ";clip" then Noclipping = false end
+
+    if cmd == ";bring" and arg2 then
+        if arg2 == "all" then
+            for _, p in pairs(Players:GetPlayers()) do if p ~= LP and not Whitelist[p.Name] and p.Character then p.Character.HumanoidRootPart.CFrame = LP.Character.HumanoidRootPart.CFrame end end
+        end
+    end
 end)
 
-RunService.Stepped:Connect(function()
-	for _, p in pairs(Players:GetPlayers()) do
-		local hum = p.Character and p.Character:FindFirstChildWhichIsA("Humanoid")
-		local y = getRoot(p) and getRoot(p).Position.Y or 0
-		if hum and (hum.WalkSpeed > 32 or y > 500) then
-			warn("🚨 Possível hacker: " .. p.Name)
-		end
-	end
-end)
+Notify("VOID-REAPER HUB V72 ONLINE.")
+Notify("USE ;LIST PARA DOMINAR O HEAVEN.")
 
--- Parte 2: Poderes avançados
-local function sayAs(name, msg)
-	game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
-end
-
-local function invisible()
-	for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
-		if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-			part.Transparency = 1
-		elseif part:IsA("Decal") then
-			part.Transparency = 1
-		end
-	end
-end
-
-local function god()
-	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
-	if hum then
-		hum.Name = "GodHumanoid"
-		local clone = hum:Clone()
-		clone.Parent = LocalPlayer.Character
-		wait()
-		hum:Destroy()
-	end
-end
-
-local function fly()
-	if flying then return end
-	flying = true
-	local hrp = getRoot(LocalPlayer)
-	local bv = Instance.new("BodyVelocity", hrp)
-	bv.Velocity = Vector3.zero
-	bv.MaxForce = Vector3.new(1, 1, 1) * 1e5
-	RunService.RenderStepped:Connect(function()
-		if not flying or not hrp then return end
-		local move = Vector3.zero
-		if UserInputService:IsKeyDown(Enum.KeyCode.W) then move += workspace.CurrentCamera.CFrame.LookVector end
-		if UserInputService:IsKeyDown(Enum.KeyCode.S) then move -= workspace.CurrentCamera.CFrame.LookVector end
-		if UserInputService:IsKeyDown(Enum.KeyCode.A) then move -= workspace.CurrentCamera.CFrame.RightVector end
-		if UserInputService:IsKeyDown(Enum.KeyCode.D) then move += workspace.CurrentCamera.CFrame.RightVector end
-		bv.Velocity = move.Unit * 100
-	end)
-end
-
-local function unfly()
-	flying = false
-	for _, v in pairs(getRoot(LocalPlayer):GetChildren()) do
-		if v:IsA("BodyVelocity") then v:Destroy() end
-	end
-end
-
-local function setNoclip(state)
-	noclip = state
-	RunService.Stepped:Connect(function()
-		if noclip and LocalPlayer.Character then
-			for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
-				if part:IsA("BasePart") then part.CanCollide = false end
-			end
-		end
-	end)
-end
-
-local function bring(name)
-	local target = Players:FindFirstChild(name)
-	if target and getRoot(target) and getRoot(LocalPlayer) then
-		getRoot(target).CFrame = getRoot(LocalPlayer).CFrame * CFrame.new(3, 0, 0)
-	end
-end
-
-local function freeze(name)
-	local target = Players:FindFirstChild(name)
-	if target and getRoot(target) then
-		getRoot(target).Anchored = true
-		frozen[name] = true
-	end
-end
-
-local function unfreeze(name)
-	local target = Players:FindFirstChild(name)
-	if target and getRoot(target) then
-		getRoot(target).Anchored = false
-		frozen[name] = nil
-	end
-end
-
--- Parte 3: Tubers93-style
-local function explodeAll()
-	for _, p in pairs(Players:GetPlayers()) do
-		if getRoot(p) then
-			local e = Instance.new("Explosion", workspace)
-			e.Position = getRoot(p).Position
-		end
-	end
-end
-
-local function spinAll()
-	for _, p in pairs(Players:GetPlayers()) do
-		local hrp = getRoot(p)
-		if hrp then
-			local spin = Instance.new("BodyAngularVelocity", hrp)
-			spin.AngularVelocity = Vector3.new(0, 10, 0)
-			spin.MaxTorque = Vector3.new(0, math.huge, 0)
-			Debris:AddItem(spin, 10)
-		end
-	end
-end
-
-local function rickroll()
-	local s = Instance.new("Sound", workspace)
-	s.SoundId = "rbxassetid://1843529274"
-	s.Volume = 5
-	s:Play()
-	Debris:AddItem(s, 20)
-end
-
-local function jumpscare()
-	local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
-	local img = Instance.new("ImageLabel", gui)
-	img.Size = UDim2.new(1, 0, 1, 0)
-	img.Image = "rbxassetid://10493227997"
-	img.BackgroundTransparency = 1
-	local s = Instance.new("Sound", workspace)
-	s.SoundId = "rbxassetid://911882310"
-	s.Volume = 10
-	s:Play()
-	Debris:AddItem(gui, 3)
-	Debris:AddItem(s, 3)
-end
-
-local function rainClones()
-	for i = 1, 20 do
-		local clone = LocalPlayer.Character:Clone()
-		clone.Parent = workspace
-		clone:MoveTo(getRoot(LocalPlayer).Position + Vector3.new(math.random(-10,10), 50+i*5, math.random(-10,10)))
-		Debris:AddItem(clone, 10)
-	end
-end
-
--- Comando principal
-LocalPlayer.Chatted:Connect(function(msg)
-	local args = msg:split(" ")
-	local cmd = args[1]:lower()
-	local arg2 = args[2]
-	local arg3 = table.concat(args, " ", 3)
-
-	if not isAdmin(LocalPlayer.Name) then return end
-
-	if cmd == ";kick" and arg2 and suspectList[arg2] then
-		local t = Players:FindFirstChild(arg2)
-		if t then t:Kick("Script detectado.") end
-
-	elseif cmd == ";kill" and arg2 then
-		local t = Players:FindFirstChild(arg2)
-		if t and t.Character then
-			local h = t.Character:FindFirstChildWhichIsA("Humanoid")
-			if h then h.Health = 0 end
-		end
-
-	elseif cmd == ";preso" then prender()
-	elseif cmd == ";soltar" then soltar()
-	elseif cmd == ";verifique" then
-		suspectList = {}
-		for _, p in pairs(Players:GetPlayers()) do
-			if p ~= LocalPlayer then
-				local hum = p.Character and p.Character:FindFirstChildWhichIsA("Humanoid")
-				if hum and hum.WalkSpeed > 32 then
-					local dist = getRoot(p) and getRoot(LocalPlayer) and (getRoot(p).Position - getRoot(LocalPlayer).Position).Magnitude or 0
-					suspectList[p.Name] = true
-					print("⚠️ " ..
-
--- Parte 4: Tubers93 avançado
-
-local function trapPlayer(name)
-	local target = Players:FindFirstChild(name)
-	if target and getRoot(target) then
-		local cage = Instance.new("Part")
-		cage.Size = Vector3.new(6, 6, 6)
-		cage.Position = getRoot(target).Position + Vector3.new(0, 3, 0)
-		cage.Anchored = true
-		cage.CanCollide = true
-		cage.Transparency = 0.3
-		cage.BrickColor = BrickColor.new("Really black")
-		cage.Parent = workspace
-		Debris:AddItem(cage, 15)
-	end
-end
-
-local function skyRed()
-	local lighting = game:GetService("Lighting")
-	lighting.Ambient = Color3.new(1, 0, 0)
-	lighting.OutdoorAmbient = Color3.new(0.5, 0, 0)
-	lighting.FogColor = Color3.new(0.3, 0, 0)
-end
-
-local function decals()
-	for i = 1, 20 do
-		local d = Instance.new("Decal")
-		d.Texture = "rbxassetid://10493227997"
-		local p = Instance.new("Part", workspace)
-		p.Size = Vector3.new(10, 10, 1)
-		p.Position = getRoot(LocalPlayer).Position + Vector3.new(math.random(-50,50), math.random(10,50), math.random(-50,50))
-		p.Anchored = true
-		p.CanCollide = false
-		d.Face = Enum.NormalId.Front
-		d.Parent = p
-		Debris:AddItem(p, 15)
-	end
-end
-
-local function playMusic(id)
-	local s = Instance.new("Sound", workspace)
-	s.SoundId = "rbxassetid://" .. id
-	s.Volume = 5
-	s.Looped = true
-	s:Play()
-	Debris:AddItem(s, 60)
-end
-
-local function muteAll()
-	for _, s in pairs(workspace:GetDescendants()) do
-		if s:IsA("Sound") then s.Volume = 0 end
-	end
-end
-
-local function unmuteAll()
-	for _, s in pairs(workspace:GetDescendants()) do
-		if s:IsA("Sound") then s.Volume = 5 end
-	end
-end
-
-local function freezeAll()
-	for _, p in pairs(Players:GetPlayers()) do
-		if getRoot(p) then getRoot(p).Anchored = true end
-	end
-end
-
-local function unfreezeAll()
-	for _, p in pairs(Players:GetPlayers()) do
-		if getRoot(p) then getRoot(p).Anchored = false end
-	end
-end
-
-local function invisibleAll()
-	for _, p in pairs(Players:GetPlayers()) do
-		if p.Character then
-			for _, part in pairs(p.Character:GetDescendants()) do
-				if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-					part.Transparency = 1
-				end
-			end
-		end
-	end
-end
-
-local function blindAll()
-	for _, p in pairs(Players:GetPlayers()) do
-		local gui = Instance.new("ScreenGui", p:FindFirstChild("PlayerGui") or p:WaitForChild("PlayerGui"))
-		local frame = Instance.new("Frame", gui)
-		frame.Size = UDim2.new(1, 0, 1, 0)
-		frame.BackgroundColor3 = Color3.new(1, 1, 1)
-		Debris:AddItem(gui, 5)
-	end
-end
-
-local function kickAll()
-	for _, p in pairs(Players:GetPlayers()) do
-		if p ~= LocalPlayer then
-			p:Kick("Expulso pelo administrador.")
-		end
-	end
-end
-
-local function firestorm()
-	for i = 1, 30 do
-		local f = Instance.new("Part", workspace)
-		f.Size = Vector3.new(2, 2, 2)
-		f.Position = getRoot(LocalPlayer).Position + Vector3.new(math.random(-50,50), 100 + i*2, math.random(-50,50))
-		f.Anchored = false
-		f.BrickColor = BrickColor.new("Bright orange")
-		f.Material = Enum.Material.Neon
-		local fire = Instance.new("Fire", f)
-		Debris:AddItem(f, 10)
-	end
-end
-
-local function tubersMode()
-	explodeAll()
-	spinAll()
-	rickroll()
-	jumpscare()
-	rainClones()
-	skyRed()
-	decals()
-	firestorm()
-end
-
-local function listFun()
-	print("🎮 Comandos Tubers93: ;explode, ;spinall, ;rickroll, ;jumpscare, ;rainclones, ;trap [nome], ;skyred, ;decals, ;music [id], ;muteall, ;unmuteall, ;freezeall, ;unfreezeall, ;invisibleall, ;blindall, ;kickall, ;firestorm, ;tubersmode")
-end
-
--- Comandos da Parte 4
-LocalPlayer.Chatted:Connect(function(msg)
-	local args = msg:split(" ")
-	local cmd = args[1]:lower()
-	local arg2 = args[2]
-
-	if not isAdmin(LocalPlayer.Name) then return end
-
-	if cmd == ";trap" and arg2 then trapPlayer(arg2)
-	elseif cmd == ";skyred" then skyRed()
-	elseif cmd == ";decals" then decals()
-	elseif cmd == ";music" and arg2 then playMusic(arg2)
-	elseif cmd == ";muteall" then muteAll()
-	elseif cmd == ";unmuteall" then unmuteAll()
-	elseif cmd == ";freezeall" then freezeAll()
-	elseif cmd == ";unfreezeall" then unfreezeAll()
-	elseif cmd == ";invisibleall" then invisibleAll()
-	elseif cmd == ";blindall" then blindAll()
-	elseif cmd == ";kickall" then kickAll()
-	elseif cmd == ";firestorm" then firestorm()
-	elseif cmd == ";tubersmode" then tubersMode()
-	elseif cmd == ";listfun" then listFun()
-	end
-end)
